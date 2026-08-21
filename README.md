@@ -15,13 +15,13 @@ The project will involve developing:
 
 ## Group Members
 
-LW Simelane : 224022386
-M Lesenyelo : 224081110
-PA Mabusela : 222021446
-NL Mazibuko : 222044762
-AL Hadebe : 223000608
-M Mokhele : 221027626
-L Sandi : 223014209
-MN Dlamini : 224093660
-NP Khotle : 218013010
+- LW Simelane : 224022386
+- M Lesenyelo : 224081110
+- PA Mabusela : 222021446
+- NL Mazibuko : 222044762
+- AL Hadebe : 223000608
+- M Mokhele : 221027626
+- L Sandi : 223014209
+- MN Dlamini : 224093660
+- NP Khotle : 218013010
 
