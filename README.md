@@ -10,7 +10,7 @@ This repository contains the group project work for ITC327W: Work-Integrated Lea
 The project will involve developing:
 
 - A Flutter mobile application
-- An ASP.NET web application
+- An ASP.NET web application 
 - A shared Supabase backend
 
 ## Group Members
