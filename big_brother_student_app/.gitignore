@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Visual Studio / .NET
+.vs/
+**/.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
