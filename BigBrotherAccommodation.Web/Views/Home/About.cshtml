@@ -1,31 +1,35 @@
 @{
     ViewData["Title"] = "About us";
 }
+
 <section class="inner-hero">
     <span class="eyebrow">OUR STORY · OUR HOME</span>
     <h1>Good people.<br /><em>A good place to call home.</em></h1>
     <p>Big Brother Student Accommodation is a student home in Universitas, Bloemfontein.</p>
 </section>
 
-<section class="section two-column">
+<section class="section container two-column">
     <div>
         <span class="eyebrow">WHY WE’RE HERE</span>
         <h2>More than a room.<br /><em>A place to belong.</em></h2>
     </div>
 
     <div>
-        <p>We know moving away to study is a big step. Our purpose is to make that step easier with secure, 
-        comfortable and affordable accommodation close to the University of the Free State.</p>
-        
-        <p>We believe every student deserves a reliable home, clear communication and a team that treats 
-         them with care.</p>     
-         
-            <div class="value-list">
-                <span>01 · Safety first</span>
-                <span>02 · Honest communication</span>
-                <span>03 · A welcoming community</span>
-            </div>
-    
+        <p>
+            We know moving away to study is a big step. Our purpose is to make that step easier with secure,
+            comfortable and affordable accommodation close to the University of the Free State and the
+            Central University of Technology.
+        </p>
+        <p>
+            We believe every student deserves a reliable home, clear communication and a team that treats
+            them with care.
+        </p>
+
+        <div class="value-list">
+            <span>01 · Safety first</span>
+            <span>02 · Honest communication</span>
+            <span>03 · A welcoming community</span>
+        </div>
     </div>
 </section>
 
@@ -35,10 +39,12 @@
     </div>
 
     <div class="purpose-copy">
-        <span class="eyebrow light-eyebrow">COME SEE FOR YOURSELF</span>
+        <span class="eyebrow">COME SEE FOR YOURSELF</span>
         <h2>Make yourself<br /><em>at home.</em></h2>
-        <p>Come visit us in Universitas and see the accommodation in person. You can also 
-            explore rooms and submit your application online.</p>
-            <a class="btn btn-lime" asp-controller="Home" asp-action="Rooms">Explore available rooms ↗</a>
+        <p>
+            Come visit us in Universitas and see the accommodation in person. You can also
+            explore rooms and submit your application online.
+        </p>
+        <a class="btn btn-main" asp-controller="Rooms" asp-action="Index">Explore available rooms</a>
     </div>
- </section>
+</section>
