@@ -1,8 +1,218 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+
+    var address = "50 Besselsen St, Universitas, Bloemfontein";
+    var mapAddress = Uri.EscapeDataString(address);
+
+    var featureList = new[]
+    {
+        (Icon: "bi-wifi", Title: "Fast & Secure", Sub: "WiFi"),
+        (Icon: "bi-key-fill", Title: "Fully Furnished", Sub: "Private Rooms"),
+        (Icon: "bi-camera-video-fill", Title: "Multi-Tier", Sub: "Security"),
+        (Icon: "bi-car-front-fill", Title: "Secure", Sub: "Parking Bays"),
+        (Icon: "bi-lightbulb-fill", Title: "Water & Electricity", Sub: "Uncapped Utilities"),
+        (Icon: "bi-basket3-fill", Title: "On-Site", Sub: "Laundry")
+    };
+
+    var faqTabs = new[]
+    {
+        (TabId: "general", TabTitle: "General", TabIcon: "bi-chat-dots-fill", Questions: new[]
+        {
+            (Question: "Is Big Brother Student Accommodations NSFAS accredited?", Answer: "Yes, we are NSFAS accredited."),
+            (Question: "Which universities do you serve?", Answer: "Mainly students from the University of the Free State (UFS) and the Central University of Technology (CUT)."),
+            (Question: "Is there a shuttle service?", Answer: "Yes, shuttle services are available."),
+            (Question: "Can I choose who I share with?", Answer: "We are more than happy to accomodate groups as well as individuals only if you are of the same gender. Let us know who you are planning to live with and we will do our best to accomodate you with the same students"),
+            (Question: "Can students renew their accommodation for the next academic year?", Answer: "Yes, you can renew your lease agreement."),
+            (Question: "Do I need to vacate my room during the holidays?", Answer: "No, only when your contract is terminated or expired. However, the tenant will have to notify the office when they leave during the holidays."),
+            (Question: "How do I book a tour for a room?", Answer: "Viewing of a room are only by appointments. Either book online or book an appointment by contacting us via email, WhatsApp or phone call."),
+            (Question: "How can parents stay informed about safety?", Answer: "Parents are welcome to contact the property team for general safety inquiries.")
+        }),
+        (TabId: "payments", TabTitle: "Payments & Fees", TabIcon: "bi-cash-coin", Questions: new[]
+        {
+            (Question: "What type of payment options are available?", Answer: "No cash transactions are allowed, only EFT and direct deposits with the correct references."),
+            (Question: "Do I pay a deposit?", Answer: "Deposits are recorded for every student. [Confirm the amount and refund conditions]"),
+            (Question: "How do I pay?", Answer: "After you pay, you upload your proof of payment on the website or application so we can confirm it."),
+            (Question: "Is financial aid or student bursary support accepted?", Answer: "We accept payments from recognized bursary providers and financial aid schemes. Documentation may be required to confirm funding arrangements.")
+        }),
+        (TabId: "rooms", TabTitle: "Rooms & Facilities", TabIcon: "bi-house-door-fill", Questions: new[]
+        {
+            (Question: "What is included in the room?", Answer: "Rooms are semi furnished with essentials such as bed, desk, chair, wardrobe, and shelving. Kitchens and bathrooms are also equipped with modern fittings."),
+            (Question: "Is bedding provided?", Answer: "No, students are required to bring their own bedding."),
+            (Question: "Are water and electricity included?", Answer: "Water and electricity are uncapped."),
+            (Question: "Is there parking and laundry?", Answer: "Yes, there are secure parking bays and an on-site laundry."),
+            (Question: "How secure is the property?", Answer: "The property is equipped with a 24/7 CCTV surveillance system."),
+            (Question: "Can I view a room before I apply?", Answer: "Yes. You can request a viewing on the website and on our mobile application.")
+        }),
+        (TabId: "apply", TabTitle: "Online Application", TabIcon: "bi-laptop", Questions: new[]
+        {
+            (Question: "How do I apply?", Answer: "Create an account, choose a room, complete the application steps and upload your documents."),
+            (Question: "Do I have to visit before I apply?", Answer: "No. You can view rooms and apply online from anywhere."),
+            (Question: "How do I know where my application is?", Answer: "Your dashboard shows your status: Submitted, Reviewing, then Decision. We also notify you."),
+            (Question: "What do I need to attach to my application?", Answer: "The following documents need to be attached: A certified ID copy(student), Proof of residence, Proof of confirmation from NSFAS, A certifed ID copy (parent/guardian), Proof of Registration from the university, 3 Month bank statement."),
+            (Question: "Can I change my details after applying?", Answer: "Yes. You can update your details, and management approves the changes."),
+            (Question: "Is my personal information safe?", Answer: "Your information is stored securely and only authorised staff can see it.")
+        })
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Comfortable student living, close to campus</h1>
+        <p>Comfortable rooms. Safe spaces. Student-friendly living.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a asp-controller="Account" asp-action="Continue" class="btn btn-main">Apply Now</a>
+            <a asp-controller="Account" asp-action="Continue" class="btn btn-light-outline">Book a Viewing</a>
+        </div>
+    </div>
+</section>
+
+<section class="trust-strip">
+    <div class="container">
+        <div class="row text-center g-2">
+            <div class="col-md-4"><span><i class="bi bi-patch-check-fill"></i>NSFAS accredited</span></div>
+            <div class="col-md-4"><span><i class="bi bi-mortarboard-fill"></i>Close to UFS and CUT</span></div>
+            <div class="col-md-4"><span><i class="bi bi-bus-front-fill"></i>Shuttle service available</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- Explore Our Rooms -->
+<section class="section container text-center">
+    <h2 class="section-title">Explore Our Rooms</h2>
+
+    <div class="row g-4 mb-4 text-start">
+        <div class="col-md-6">
+            <div class="room-box">
+                <img src="~/images/single-room.jpg" alt="Single room" />
+                <div class="room-box-body">
+                    <h3>Single room</h3>
+                    <p class="room-price">From R4500 p/m</p>
+                    <div class="room-chips">
+                        <span>Private space</span>
+                        <span>Furnished</span>
+                        <span>WiFi</span>
+                    </div>
+                    <a asp-controller="Rooms" asp-action="Index" asp-route-search="single" class="btn btn-outline">Read more</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="room-box">
+                <img src="~/images/shared-room.jpg" alt="Shared room" />
+                <div class="room-box-body">
+                    <h3>Shared room</h3>
+                    <p class="room-price">From R4000 p/m</p>
+                    <div class="room-chips">
+                        <span>Shared with 1 student</span>
+                        <span>Furnished</span>
+                        <span>WiFi</span>
+                    </div>
+                    <a asp-controller="Rooms" asp-action="Index" asp-route-search="shar" class="btn btn-outline">Read more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a asp-controller="Rooms" asp-action="Index" class="btn btn-main">View All Rooms</a>
+</section>
+
+<!-- The Big Brother Difference -->
+<section class="section difference" id="about">
+    <div class="container">
+        <h2 class="section-title">The Big Brother Difference</h2>
+        <div class="row g-4">
+            @foreach (var feature in featureList)
+            {
+                <div class="col-md-4 col-sm-6">
+                    <div class="feature">
+                        <div class="feature-icon"><i class="bi @feature.Icon"></i></div>
+                        <div>
+                            <h3>@feature.Title</h3>
+                            <small>@feature.Sub</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,30 C240,70 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#F7F4F0" />
+</svg>
+
+<!-- FAQ -->
+<section class="section faq-section" id="faq">
+    <div class="container text-center">
+        <h2 class="section-title">Got questions? We've got answers</h2>
+
+        <ul class="nav nav-tabs faq-tabs" role="tablist">
+            @for (int tabIndex = 0; tabIndex < faqTabs.Length; tabIndex++)
+            {
+                var faqTab = faqTabs[tabIndex];
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(tabIndex == 0 ? "active" : "")" data-bs-toggle="tab" data-bs-target="#faq-@(faqTab.TabId)" type="button" role="tab"><i class="bi @(faqTab.TabIcon)"></i>@(faqTab.TabTitle)</button>
+                </li>
+            }
+        </ul>
+
+        <div class="tab-content pt-3 text-start">
+            @for (int tabIndex = 0; tabIndex < faqTabs.Length; tabIndex++)
+            {
+                var faqTab = faqTabs[tabIndex];
+                <div class="tab-pane fade @(tabIndex == 0 ? "show active" : "")" id="faq-@(faqTab.TabId)" role="tabpanel">
+                    <div class="accordion" id="acc-@(faqTab.TabId)">
+                        @for (int qIndex = 0; qIndex < faqTab.Questions.Length; qIndex++)
+                        {
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@(faqTab.TabId)-@(qIndex)">
+                                        <span class="q-number">@(qIndex + 1)</span>@(faqTab.Questions[qIndex].Question)
+                                    </button>
+                                </h3>
+                                <div id="@(faqTab.TabId)-@(qIndex)" class="accordion-collapse collapse" data-bs-parent="#acc-@(faqTab.TabId)">
+                                    <div class="accordion-body">@(faqTab.Questions[qIndex].Answer)</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="faq-contact">
+            <div>
+                <h3>Still curious?</h3>
+                <p>Can't find your answer? Message us and we'll get back to you.</p>
+            </div>
+            <a href="https://wa.me/27738313462" target="_blank" rel="noopener" class="btn btn-main"><i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp</a>
+        </div>
+
+        <a asp-controller="Account" asp-action="Continue" class="btn btn-main mt-4">Apply Now</a>
+    </div>
+</section>
+
+<!-- Find Us Here -->
+<section class="pb-0">
+    <h2 class="section-title">Find Us Here</h2>
+    <div class="map-box">
+        <iframe src="https://www.google.com/maps?q=@mapAddress&output=embed"
+                loading="lazy" title="Map showing Big Brother Student Accommodations"></iframe>
+        <a class="btn btn-main" asp-controller="Home" asp-action="Directions">Get Directions</a>
+    </div>
+</section>
+
+<!-- Closing call to action -->
+<section class="section container text-center">
+    <p class="intro-text">Ready to find your student home? Explore our available accommodation options and take the next step towards comfortable, secure student living near campus. Book a viewing or start your application today.</p>
+    <a asp-controller="Account" asp-action="Continue" class="btn btn-main">Book a Viewing</a>
+</section>
+
+<!-- App promo -->
+<section class="app-banner">
+    <h2>Your student home, made easier</h2>
+    <p class="intro-text">Use the Big Brother student app to browse rooms, apply for accommodation, track your application and submit maintenance requests.</p>
+    <a href="#" class="btn btn-main">Explore the Student App</a>
+</section>

@@ -1,4 +1,13 @@
+
+
+using Supabase.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSupabase(
+    supabaseUrl: builder.Configuration["Supabase:Url"]!,
+    supabaseKey: builder.Configuration["Supabase:Key"]!);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
