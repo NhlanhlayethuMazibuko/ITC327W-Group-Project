@@ -3,48 +3,98 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BigBrotherAccommodation.Web</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Big Brother Student Accommodations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BigBrotherAccommodation.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BigBrotherAccommodation.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+    <nav class="navbar navbar-expand-lg navbar-main">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="Big Brother Student Accommodations" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Rooms" asp-action="Index">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+                <div class="d-flex gap-2 align-items-center">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="small">Hi, @(User.FindFirst("first_name")?.Value ?? User.Identity?.Name)</span>
+                        <form asp-controller="Account" asp-action="LogOut" method="post" class="m-0">
+                            <button type="submit" class="btn btn-bb-outline">Sign Out</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="SignIn" class="btn btn-bb-outline">Sign In</a>
+                        <a asp-controller="Account" asp-action="SignUp" class="btn btn-bb-outline">Register</a>
+                    }
+                </div>>
+            </div>
+        </div>
+    </nav>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-5 col-md-6">
+                    <a asp-controller="Home" asp-action="Index">
+                        <img class="footer-logo"
+                             src="~/images/logo.png"
+                             alt="Big Brother Student Accommodations" />
+                    </a>
+                    <p class="footer-description">
+                        Big Brother Student Accommodations is a student housing provider based in Bloemfontein, Free State.
+                        We offer convenient accommodation options for UFS and CUT students, helping them find a comfortable place to live while they study.
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h2 class="footer-heading">Explore</h2>
+                    <ul class="footer-links">
+                        <li><a href="#">Apply Now</a></li>
+                        <a asp-controller="Account" asp-action="SignIn">Sign In</a>
+                        <a asp-controller="Account" asp-action="SignUp">Register</a>
+                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-controller="Rooms" asp-action="Index">Rooms</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" asp-fragment="faq">Frequently Asked Questions</a></li>
                     </ul>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - BigBrotherAccommodation.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <div class="col-lg-4 col-md-6" id="contact">
+                    <h2 class="footer-heading">Contact</h2>
+                    <div class="footer-contact">
+                        <p><i class="bi bi-geo-alt"></i><span><a href="https://www.google.com/maps/search/?api=1&query=50+Besselsen+St,+Universitas,+Bloemfontein" target="_blank" rel="noopener">50 Besselsen St, Universitas</a></span></p>
+                        <p><i class="bi bi-telephone"></i><span>Phone number: <a href="tel:+27738313462">073 831 3462</a></span></p>
+                        <p><i class="bi bi-whatsapp"></i><span>WhatsApp number: <a href="https://wa.me/27738313462" target="_blank" rel="noopener">073 831 3462</a></span></p>
+                        <p><i class="bi bi-envelope"></i><span>Email address: <a href="mailto:nfezile@yahoo.com">nfezile@yahoo.com</a></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copy">
+                &copy; @DateTime.Now.Year Big Brother Student Accommodations. All rights reserved.
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Directions";
+    var address = "50 Besselsen St, Universitas, Bloemfontein";
+    var mapAddress = Uri.EscapeDataString(address);
+}
+
+<section class="page-header">
+    <div class="container">
+        <h1>Find us</h1>
+        <p>@address</p>
+    </div>
+</section>
+
+<section class="section container">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="map-card">
+                <iframe src="https://www.google.com/maps?q=@mapAddress&output=embed"
+                        loading="lazy" title="Map showing Big Brother Student Accommodations"></iframe>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="info-card">
+                <h2>Property address</h2>
+                <p class="address-text"><i class="bi bi-geo-alt-fill"></i><span>@address</span></p>
+                <a class="btn btn-orange w-100" target="_blank" rel="noopener"
+                   href="https://www.google.com/maps/dir/?api=1&destination=@mapAddress">Open directions</a>
+                <h3 class="info-heading">How are you travelling?</h3>
+                <div class="travel-buttons">
+                    <a class="travel-link" target="_blank" rel="noopener"
+                       href="https://www.google.com/maps/dir/?api=1&destination=@mapAddress&travelmode=walking"><i class="bi bi-person-walking"></i>Walking</a>
+                    <a class="travel-link" target="_blank" rel="noopener"
+                       href="https://www.google.com/maps/dir/?api=1&destination=@mapAddress&travelmode=driving"><i class="bi bi-car-front-fill"></i>Driving</a>
+                    <a class="travel-link" target="_blank" rel="noopener"
+                       href="https://www.google.com/maps/dir/?api=1&destination=@mapAddress&travelmode=transit"><i class="bi bi-bus-front-fill"></i>Public transport</a>
+                </div>
+                <p class="small-text">Google Maps starts from your current location.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container pb-5">
+    <h2 class="page-subtitle text-center">Need help finding us?</h2>
+    <div class="row g-3 mt-2">
+        <div class="col-md-4">
+            <a class="contact-card" href="tel:+27738313462">
+                <i class="bi bi-telephone-fill"></i><span>Call us</span><strong>073 831 3462</strong>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="contact-card" href="https://wa.me/27738313462" target="_blank" rel="noopener">
+                <i class="bi bi-whatsapp"></i><span>WhatsApp</span><strong>073 831 3462</strong>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="contact-card" href="mailto:nfezile@yahoo.com">
+                <i class="bi bi-envelope-fill"></i><span>Email</span><strong>nfezile@yahoo.com</strong>
+            </a>
+        </div>
+    </div>
+</section>

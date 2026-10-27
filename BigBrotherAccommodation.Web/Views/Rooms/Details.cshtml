@@ -1,0 +1,55 @@
+﻿@model RoomDetailsViewModel
+@{
+    ViewData["Title"] = Model.Room.Name;
+    var images = Model.Images;
+}
+
+<section class="section container">
+    <a asp-controller="Rooms" asp-action="Index" class="back-link"><i class="bi bi-arrow-left"></i> Back to rooms</a>
+
+    <div class="gallery @(images.Count < 2 ? "gallery-single" : "")">
+        @if (images.Count == 0)
+        {
+            <div class="no-photo gallery-main"><i class="bi bi-image"></i></div>
+        }
+        else
+        {
+            <img class="gallery-main" src="@images[0]" alt="@Model.Room.Name" />
+            @foreach (var photo in images.Skip(1).Take(2))
+            {
+                <img src="@photo" alt="@Model.Room.Name photo" />
+            }
+        }
+    </div>
+
+    <h1 class="list-title mt-4">@Model.Room.Name</h1>
+    <p class="small-text">Universitas</p>
+
+    <h2 class="detail-heading">Room Information</h2>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="info-box">
+                <strong>Room type</strong>
+                <span>@Model.Room.RoomType</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="info-box">
+                <strong>Price &amp; availability</strong>
+                <span>R@(Model.Room.Price.ToString("N0"))/pm - @(Model.Room.IsAvailable ? "available" : "not available")</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="detail-heading">Features</h2>
+    <p>@string.Join(" - ", Model.Features)</p>
+
+    <div class="row g-3 mt-3">
+        <div class="col-md-6">
+            <a asp-controller="Account" asp-action="Continue" class="btn btn-orange w-100">Book a viewing</a>
+        </div>
+        <div class="col-md-6">
+            <a asp-controller="Account" asp-action="Continue" class="btn btn-outline-orange w-100">Apply now</a>
+        </div>
+    </div>
+</section>
