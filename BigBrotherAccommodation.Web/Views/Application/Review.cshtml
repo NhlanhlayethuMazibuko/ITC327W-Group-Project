@@ -1,0 +1,44 @@
+﻿@model ApplicationRecord
+@{
+    ViewData["Title"] = "Review application";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Room application</h1>
+    <p class="ap-sub">Check your details before submitting your application</p>
+
+    <div class="ap-stepline">Step 2 of 2</div>
+    <div class="ap-bar"><span class="on"></span><span class="on"></span></div>
+
+    <div asp-validation-summary="ModelOnly" class="ap-error"></div>
+
+    <div class="ap-field">
+        <label>Full name</label>
+        <input value="@Model.FullName" readonly />
+    </div>
+    <div class="ap-field">
+        <label>Email address</label>
+        <input value="@Model.Email" readonly />
+    </div>
+    <div class="ap-field">
+        <label>Phone number</label>
+        <input value="@Model.Phone" readonly />
+    </div>
+    <div class="ap-field">
+        <label>Institution / campus</label>
+        <input value="@Model.Institution" readonly />
+    </div>
+    <div class="ap-field">
+        <label>Preferred room</label>
+        <input value="@Model.PreferredRoom" readonly />
+    </div>
+
+    <form method="post" asp-controller="Application" asp-action="SubmitApplication">
+        <div class="ap-buttons">
+            <a asp-controller="Application" asp-action="Documents" class="ap-btn-outline">Back</a>
+            <button type="submit" class="ap-btn">Submit application</button>
+        </div>
+    </form>
+</div>

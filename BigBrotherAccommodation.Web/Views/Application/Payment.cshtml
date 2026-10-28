@@ -1,0 +1,80 @@
+﻿@model PaymentInstructionsViewModel
+@{
+    ViewData["Title"] = "Payment instructions";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap ap-wide">
+    <div class="pay-head">
+        <div>
+            <h1 class="ap-title">Payment instructions</h1>
+            <p class="ap-sub">Application @Model.App.Reference &nbsp;-&nbsp; Approved</p>
+        </div>
+        <span class="pay-pill">Awaiting payment</span>
+    </div>
+
+    <div class="ap-green">
+        Your application has been approved. Choose how you intend to pay. This page records your selection for record keeping,
+        it does not take or process a payment.
+    </div>
+
+    @if (TempData["Message"] is string message)
+    {
+        <div class="ap-ok">@message</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="ap-error"></div>
+
+    <form method="post" asp-controller="Application" asp-action="Payment" asp-route-id="@Model.App.Id" enctype="multipart/form-data">
+        <div class="pay-grid">
+            <div>
+                <div class="ap-field">
+                    <label>Amount due</label>
+                    <input value="@Model.AmountText" readonly />
+                </div>
+                <div class="ap-field">
+                    <label>Payment due date</label>
+                    <input value="@Model.DueDateText" readonly />
+                </div>
+                <div class="ap-field">
+                    <label>Payment method</label>
+                    <select name="method" class="ap-select">
+                        <option>Bank Transfer / EFT</option>
+                    </select>
+                    <small class="ap-hint">Pay from your own banking app to the owner’s account.</small>
+                </div>
+            </div>
+
+            <div>
+                <div class="pay-bank">
+                    <div>@Model.AccountHolder</div>
+                    <div>Big Brother Student Accommodations</div>
+                    <div>Bank Name: @Model.BankName</div>
+                    <div>Account Number: @Model.AccountNumber</div>
+                    <div>Branch Code: @Model.BranchCode</div>
+                    <div class="pay-ref">Payment reference: @Model.App.Reference</div>
+                </div>
+                <div class="pay-note">Transfer through your bank directly. Then upload proof of payment in the given space.</div>
+            </div>
+        </div>
+
+        <label class="pay-drop">
+            <input type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png" />
+            <span class="pay-plus">+</span>
+            <span id="proofName">Upload receipt or bank proof (PDF, JPG or PNG)</span>
+        </label>
+
+        <div class="ap-buttons">
+            <a href="https://wa.me/27738313462" target="_blank" rel="noopener" class="ap-btn-outline">Contact management</a>
+            <button type="submit" class="ap-btn">Save payment preference</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    var proofInput = document.querySelector('.pay-drop input');
+    proofInput.addEventListener('change', function () {
+        document.getElementById('proofName').textContent =
+            proofInput.files.length ? proofInput.files[0].name : 'Upload receipt or bank proof (PDF, JPG or PNG)';
+    });
+</script>
