@@ -1,0 +1,68 @@
+﻿@model ApplyDocumentsViewModel
+@{
+    ViewData["Title"] = "Supporting documents";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Room application</h1>
+    <p class="ap-sub">Complete your details to apply for accommodation</p>
+
+    @if (Model.Errors.Any())
+    {
+        <div class="ap-error">
+            <ul>
+                @foreach (var error in Model.Errors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <h2 class="ap-h2">Supporting documents</h2>
+    <p class="ap-hint">Upload clear, readable files requested for this application.</p>
+
+    <form method="post" asp-controller="Application" asp-action="Documents" enctype="multipart/form-data">
+        @foreach (var row in Model.Rows)
+        {
+            <div class="ap-doc">
+                <div>
+                    <strong>@row.Label</strong>
+                    <small>@row.Hint</small>
+                    @if (row.UploadedName != null)
+                    {
+                        <small class="ap-uploaded">Uploaded: @row.UploadedName</small>
+                    }
+                </div>
+                <div class="ap-doc-right">
+                    <label class="ap-choose">
+                        <input type="file" name="@row.FieldName" accept=".pdf,.jpg,.jpeg,.png" />
+                        <span>+ @(row.UploadedName != null ? "Replace file" : "Choose file")</span>
+                    </label>
+                    <span class="ap-chosen"></span>
+                </div>
+            </div>
+        }
+
+        <div class="ap-privacy">
+            <strong>Privacy:</strong> Upload only documents requested for your application. You can replace a file before submitting.
+            Management will review these documents with your application.
+        </div>
+
+        <div class="ap-buttons">
+            <button type="submit" name="submitAction" value="back" class="ap-btn-outline">Back</button>
+            <button type="submit" name="submitAction" value="continue" class="ap-btn">Continue to review</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.querySelectorAll('.ap-choose input').forEach(function (input) {
+        input.addEventListener('change', function () {
+            var label = input.closest('.ap-doc-right').querySelector('.ap-chosen');
+            label.textContent = input.files.length ? 'Selected: ' + input.files[0].name : '';
+        });
+    });
+</script>

@@ -1,0 +1,55 @@
+﻿@model ApplyDetailsViewModel
+@{
+    ViewData["Title"] = "Room application";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Room application</h1>
+    <p class="ap-sub">Complete your details to apply for accommodation</p>
+
+    <div class="ap-stepline">Step 1 of 2: Student details</div>
+    <div class="ap-bar"><span class="on"></span><span></span></div>
+
+    @if (TempData["Message"] is string message)
+    {
+        <div class="ap-ok">@message</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="ap-error"></div>
+
+    <form method="post" asp-controller="Application" asp-action="Details">
+        <input type="hidden" asp-for="RoomId" />
+
+        <div class="ap-field">
+            <label asp-for="FullName">Full name</label>
+            <input asp-for="FullName" placeholder="Enter your full name" autocomplete="name" />
+            <span asp-validation-for="FullName" class="ap-err"></span>
+        </div>
+        <div class="ap-field">
+            <label asp-for="Email">Email address</label>
+            <input asp-for="Email" type="email" placeholder="Enter your email" autocomplete="email" />
+            <span asp-validation-for="Email" class="ap-err"></span>
+        </div>
+        <div class="ap-field">
+            <label asp-for="Phone">Phone number</label>
+            <input asp-for="Phone" type="tel" placeholder="Enter your phone number" autocomplete="tel" />
+            <span asp-validation-for="Phone" class="ap-err"></span>
+        </div>
+        <div class="ap-field">
+            <label asp-for="Institution">Institution / campus</label>
+            <input asp-for="Institution" placeholder="Enter your institution" />
+            <span asp-validation-for="Institution" class="ap-err"></span>
+        </div>
+        <div class="ap-field">
+            <label asp-for="PreferredRoom">Preferred room</label>
+            <input asp-for="PreferredRoom" placeholder="Enter your preferred room" />
+            <span asp-validation-for="PreferredRoom" class="ap-err"></span>
+        </div>
+
+        <div class="ap-buttons">
+            <button type="submit" name="submitAction" value="draft" class="ap-btn-outline">Save draft</button>
+            <button type="submit" name="submitAction" value="review" class="ap-btn">Review details</button>
+        </div>
+    </form>
+</div>
