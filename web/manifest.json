@@ -1,6 +1,6 @@
 {
-    "name": "bigbrother",
-    "short_name": "bigbrother",
+    "name": "big_brother_student_app",
+    "short_name": "big_brother_student_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
