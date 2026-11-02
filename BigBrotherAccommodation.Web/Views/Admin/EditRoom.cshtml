@@ -1,0 +1,26 @@
+﻿@model RoomFormViewModel
+@{
+    ViewData["Title"] = "Edit room";
+    ViewData["Active"] = "rooms";
+    ViewData["PreviewTitle"] = "Student listing preview";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="adm-title">Edit room</h1>
+<p class="adm-sub">Update the room details and availability shown to students.</p>
+
+<form method="post" asp-controller="Admin" asp-action="EditRoom" asp-route-id="@Model.Id" enctype="multipart/form-data">
+    <partial name="_RoomForm" model="Model" />
+
+    <div class="adm-actions between">
+        <button type="submit" class="adm-btn-danger" formnovalidate
+                formaction="@Url.Action("MarkUnavailable", "Admin", new { id = Model.Id })"
+                onclick="return confirm('Mark this room as unavailable to students?');">
+            Mark unavailable
+        </button>
+        <div class="adm-actions">
+            <a asp-controller="Admin" asp-action="Rooms" class="adm-btn-outline">Cancel</a>
+            <button type="submit" class="adm-btn">Save changes</button>
+        </div>
+    </div>
+</form>

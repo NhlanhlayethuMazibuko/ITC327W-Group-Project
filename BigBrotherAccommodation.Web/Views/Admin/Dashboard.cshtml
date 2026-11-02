@@ -1,0 +1,54 @@
+﻿@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Active"] = "dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Dashboard</h1>
+        <p class="adm-sub">Quick overview of accommodation activity.</p>
+    </div>
+    <a href="#" class="adm-link-muted">Staff profile</a>
+</div>
+
+<div class="adm-stats">
+    <a asp-controller="Admin" asp-action="Rooms" asp-route-availability="available" class="adm-stat">
+        <strong>@Model.AvailableRooms</strong>
+        <span>Available rooms</span>
+    </a>
+    <a asp-controller="Admin" asp-action="Applications" class="adm-stat">
+        <strong>@Model.ApplicationsToReview</strong>
+        <span>Applications to review</span>
+    </a>
+    <a asp-controller="Admin" asp-action="Viewings" class="adm-stat">
+        <strong>@Model.ViewingRequests</strong>
+        <span>Viewing requests</span>
+    </a>
+    <a asp-controller="Admin" asp-action="Rooms" asp-route-availability="occupied" class="adm-stat">
+        <strong>@Model.OccupiedRooms</strong>
+        <span>Occupied rooms</span>
+    </a>
+</div>
+
+<h2 class="adm-h2">Needs attention</h2>
+<div class="adm-attn">
+    <span class="adm-dot"></span>
+    <div class="adm-attn-text">
+        <small>New applications (@Model.NewApplications)</small>
+        <span>@(Model.NewApplications == 0 ? "No new applications are waiting for review." : $"{Model.NewApplications} submitted application(s) are waiting for review.")</span>
+    </div>
+    <a asp-controller="Admin" asp-action="Applications" class="adm-orange-link">Review</a>
+</div>
+<div class="adm-attn">
+    <span class="adm-dot"></span>
+    <div class="adm-attn-text">
+        <small>Viewing requests</small>
+        <span>Check requested dates and record a response</span>
+    </div>
+    <a asp-controller="Admin" asp-action="Viewings" class="adm-orange-link">Open</a>
+</div>
+
+<h2 class="adm-h2">Recent activity</h2>
+<div class="adm-activity">No activity yet. Updates will appear here as applications and viewing requests come in.</div>

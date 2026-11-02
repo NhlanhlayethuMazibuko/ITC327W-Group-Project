@@ -1,0 +1,148 @@
+﻿@model RoomFormViewModel
+
+<input type="hidden" asp-for="Id" />
+<div asp-validation-summary="ModelOnly" class="adm-error"></div>
+
+<div class="adm-card">
+    <h2 class="adm-card-title">Room information</h2>
+    <div class="adm-grid">
+        <div class="adm-field adm-span">
+            <label asp-for="Name">Room name</label>
+            <input asp-for="Name" placeholder="e.g. Room 17" />
+            <span asp-validation-for="Name" class="adm-err"></span>
+        </div>
+
+        <div class="adm-field">
+            <label asp-for="RoomType">Room type</label>
+            <select asp-for="RoomType">
+                <option value="">Select room type</option>
+                @foreach (var type in Model.RoomTypeOptions)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <span asp-validation-for="RoomType" class="adm-err"></span>
+        </div>
+
+        <div class="adm-field">
+            <label>Availability</label>
+            <select name="IsAvailable">
+                <option value="true" selected="@Model.IsAvailable">Available</option>
+                <option value="false" selected="@(!Model.IsAvailable)">Occupied</option>
+            </select>
+        </div>
+
+        <div class="adm-field">
+            <label>Listing</label>
+            <select name="IsListed">
+                <option value="true" selected="@Model.IsListed">Show on website and app</option>
+                <option value="false" selected="@(!Model.IsListed)">Hidden (e.g. test room)</option>
+            </select>
+        </div>
+
+        <div class="adm-field">
+            <label asp-for="Price">Monthly price (R)</label>
+            <input asp-for="Price" type="number" min="0" step="1" placeholder="e.g. 4500" />
+            <span asp-validation-for="Price" class="adm-err"></span>
+        </div>
+
+        <div class="adm-field">
+            <label asp-for="OccupancyType">Occupancy type</label>
+            <select asp-for="OccupancyType">
+                <option value="Single">Single</option>
+                <option value="Sharing">Sharing</option>
+            </select>
+        </div>
+
+        <div class="adm-field adm-span">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" rows="2" placeholder="Add a short description of the room"></textarea>
+        </div>
+
+        <div class="adm-field adm-span">
+            <label for="photos">Room photos</label>
+            <input type="file" id="photos" name="Photos" accept="image/jpeg,image/png,image/webp" multiple />
+            <small class="adm-hint">JPG, PNG or WebP, up to 5 MB each.</small>
+        </div>
+    </div>
+</div>
+
+<div class="adm-card">
+    <h2 class="adm-card-title">@(ViewData["PreviewTitle"] ?? "Listing preview")</h2>
+    <div class="adm-preview">
+        <div class="adm-preview-text">
+            <strong id="pvName">Room name</strong>
+            <div>Big Brother Student Accommodations</div>
+            <div><span id="pvType">Room type</span> - <span id="pvAvail" class="adm-ok">Available</span></div>
+            <div>R <span id="pvPrice">0</span> / month</div>
+            <p id="pvDesc">Room description and features appear here.</p>
+        </div>
+        <div class="adm-preview-photos" id="pvPhotos" data-existing="@(Model.ExistingImages.Any() ? "true" : "false")">
+            @if (Model.ExistingImages.Any())
+            {
+                foreach (var img in Model.ExistingImages.Take(2))
+                {
+                    <img src="@img" alt="Room photo" />
+                }
+            }
+            else
+            {
+                <div class="adm-noimg"><i class="bi bi-image"></i></div>
+            }
+        </div>
+    </div>
+    <p class="adm-hint" id="pvNew"></p>
+</div>
+
+<script>
+    (function () {
+        var get = function (id) { return document.getElementById(id); };
+        var name = get('Name'), type = get('RoomType'), price = get('Price'), desc = get('Description');
+        var avail = document.querySelector('[name="IsAvailable"]');
+        var photos = get('photos');
+
+        function money(v) {
+            var n = parseFloat(v);
+            return isNaN(n) ? '0' : n.toLocaleString('en-ZA');
+        }
+
+        function update() {
+            get('pvName').textContent = name.value || 'Room name';
+            get('pvType').textContent = type.value || 'Room type';
+            var isAvail = avail.value === 'true';
+            var el = get('pvAvail');
+            el.textContent = isAvail ? 'Available' : 'Occupied';
+            el.className = isAvail ? 'adm-ok' : 'adm-bad';
+            get('pvPrice').textContent = money(price.value);
+            get('pvDesc').textContent = desc.value || 'Room description and features appear here.';
+        }
+
+        [name, type, price, desc, avail].forEach(function (field) {
+            field.addEventListener('input', update);
+            field.addEventListener('change', update);
+        });
+        update();
+
+        photos.addEventListener('change', function () {
+            var files = photos.files;
+            var box = get('pvPhotos');
+            if (!files.length) { get('pvNew').textContent = ''; return; }
+
+            if (box.getAttribute('data-existing') === 'true') {
+                get('pvNew').textContent = files.length + ' new photo(s) will be added when you save.';
+                return;
+            }
+
+            box.innerHTML = '';
+            var img = document.createElement('img');
+            img.src = URL.createObjectURL(files[0]);
+            box.appendChild(img);
+            if (files.length > 1) {
+                var more = document.createElement('span');
+                more.className = 'adm-more';
+                more.textContent = '+ ' + (files.length - 1);
+                box.appendChild(more);
+            }
+        });
+    })();
+</script>

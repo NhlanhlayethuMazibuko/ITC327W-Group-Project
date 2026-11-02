@@ -1,0 +1,58 @@
+﻿@model AdminStudentsViewModel
+@{
+    ViewData["Title"] = "Student records";
+    ViewData["Active"] = "students";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Student records</h1>
+        <p class="adm-sub">Find relevant applicant and current occupant records.</p>
+    </div>
+</div>
+
+@if (Model.LoadFailed)
+{
+    <div class="adm-error">We couldn't load student records. Check the Output window in Visual Studio for the reason.</div>
+}
+
+<div data-list>
+    <div class="adm-filters adm-filters-2">
+        <input type="text" placeholder="Search name or student number" data-list-search />
+        <select data-list-filter aria-label="Record type">
+            <option value="">Record type: All</option>
+            <option value="applicant">Applicant</option>
+            <option value="occupant">Occupant</option>
+        </select>
+    </div>
+
+    <div class="adm-table-wrap">
+        <table class="adm-table">
+            <thead>
+                <tr>
+                    <th>Student name</th>
+                    <th>Status</th>
+                    <th>Room</th>
+                    <th>Record</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody data-list-body>
+                @foreach (var s in Model.Items)
+                {
+                    <tr data-row data-search="@s.SearchText" data-filter="@s.RecordKey" data-sort="0">
+                        <td>@s.Name</td>
+                        <td>@s.Status</td>
+                        <td>@s.Room</td>
+                        <td>@s.RecordLabel</td>
+                        <td><a asp-controller="Admin" asp-action="StudentRecord" asp-route-id="@s.StudentId" class="adm-orange-link">View</a></td>
+                    </tr>
+                }
+                <tr data-list-empty hidden>
+                    <td colspan="5" class="adm-empty">@(Model.Items.Any() ? "No student records match your search." : "No student records yet.")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

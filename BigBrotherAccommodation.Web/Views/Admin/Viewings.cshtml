@@ -1,0 +1,68 @@
+﻿@model AdminViewingsViewModel
+@{
+    ViewData["Title"] = "Viewing requests";
+    ViewData["Active"] = "viewings";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Viewing requests</h1>
+        <p class="adm-sub">Review requested viewing times and update each request.</p>
+    </div>
+</div>
+
+@if (TempData["Message"] is string message)
+{
+    <div class="adm-notice">@message</div>
+}
+@if (Model.LoadFailed)
+{
+    <div class="adm-error">We couldn't load viewing requests. Check the Output window in Visual Studio for the reason.</div>
+}
+
+<div data-list>
+    <div class="adm-filters adm-filters-3">
+        <input type="text" placeholder="Search student or reference" data-list-search />
+        <select data-list-filter aria-label="Status">
+            <option value="">Status: All</option>
+            <option value="requested">Requested</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="rescheduled">Alternative suggested</option>
+            <option value="declined">Declined</option>
+        </select>
+        <select data-list-sort aria-label="Sort">
+            <option value="recent">Sort: Recent first</option>
+            <option value="oldest">Sort: Oldest first</option>
+        </select>
+    </div>
+
+    <div class="adm-table-wrap">
+        <table class="adm-table">
+            <thead>
+                <tr>
+                    <th>Request</th>
+                    <th>Student</th>
+                    <th>Room</th>
+                    <th>Requested date</th>
+                    <th>Stage</th>
+                </tr>
+            </thead>
+            <tbody data-list-body>
+                @foreach (var v in Model.Items)
+                {
+                    <tr data-row data-search="@v.SearchText" data-filter="@v.StatusKey" data-sort="@v.SortKey">
+                        <td><a asp-controller="Admin" asp-action="ViewingDetails" asp-route-id="@v.Id" class="adm-orange-link">@v.Reference</a></td>
+                        <td>@v.Student</td>
+                        <td>@v.Room</td>
+                        <td>@v.RequestedText</td>
+                        <td><span class="adm-st adm-vs-@v.StatusKey">@v.StatusLabel</span></td>
+                    </tr>
+                }
+                <tr data-list-empty hidden>
+                    <td colspan="5" class="adm-empty">@(Model.Items.Any() ? "No viewing requests match your search." : "No viewing requests yet.")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

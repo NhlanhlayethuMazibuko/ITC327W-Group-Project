@@ -1,0 +1,46 @@
+@model AdminMaintenanceReportsViewModel
+@{
+    ViewData["Title"] = "Maintenance reports";
+    ViewData["Active"] = "reports";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Maintenance requests</h1>
+        <p class="adm-sub">Review maintenance requests recorded in Supabase.</p>
+    </div>
+    <a class="adm-btn" asp-controller="Admin" asp-action="Announcements" asp-fragment="new-announcement">New announcement</a>
+</div>
+
+@if (Model.LoadFailed)
+{
+    <p class="adm-sub">Maintenance records could not be loaded from Supabase.</p>
+}
+else if (Model.Items.Count == 0)
+{
+    <p class="adm-sub">There are no maintenance records in Supabase.</p>
+}
+else
+{
+    <div class="adm-table-wrap">
+        <table class="adm-table adm-report-table">
+            <thead>
+                <tr><th>Issue</th><th>Student</th><th>Request</th><th>Room</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@(item.Record.RequestType ?? item.Record.Category ?? item.Record.Description ?? "")</td>
+                        <td>@item.StudentName @if (!string.IsNullOrWhiteSpace(item.StudentNumber)) { <span>(@item.StudentNumber)</span> }</td>
+                        <td>@item.Record.CreatedAt?.ToLocalTime().ToString("g")</td>
+                        <td>@item.Room</td>
+                        <td><span class="adm-report-status">@MaintenanceRecord.LabelFor(item.Record.Status ?? "")</span></td>
+                        <td><a class="adm-btn-outline" asp-controller="Admin" asp-action="MaintenanceDetails" asp-route-id="@item.Record.Id">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

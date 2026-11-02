@@ -1,0 +1,67 @@
+﻿@model AdminApplicationsViewModel
+@{
+    ViewData["Title"] = "Applications";
+    ViewData["Active"] = "applications";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Applications</h1>
+        <p class="adm-sub">Review student applications and update their progress stage.</p>
+    </div>
+</div>
+
+@if (TempData["Message"] is string message)
+{
+    <div class="adm-notice">@message</div>
+}
+@if (Model.LoadFailed)
+{
+    <div class="adm-error">We couldn't load applications. Check the Output window in Visual Studio for the reason.</div>
+}
+
+<div data-list>
+    <div class="adm-filters adm-filters-3">
+        <input type="text" placeholder="Search student or reference" data-list-search />
+        <select data-list-filter aria-label="Stage">
+            <option value="">Stage: All</option>
+            <option value="submitted">Submitted</option>
+            <option value="reviewing">Reviewing</option>
+            <option value="decision">Decision</option>
+        </select>
+        <select data-list-sort aria-label="Sort">
+            <option value="recent">Sort: Recent first</option>
+            <option value="oldest">Sort: Oldest first</option>
+        </select>
+    </div>
+
+    <div class="adm-table-wrap">
+        <table class="adm-table">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Student</th>
+                    <th>Room</th>
+                    <th>Submitted</th>
+                    <th>Stage</th>
+                </tr>
+            </thead>
+            <tbody data-list-body>
+                @foreach (var a in Model.Items)
+                {
+                    <tr data-row data-search="@a.SearchText" data-filter="@a.StageKey" data-sort="@a.SortKey">
+                        <td><a asp-controller="Admin" asp-action="ApplicationReview" asp-route-id="@a.Id" class="adm-orange-link">@a.Reference</a></td>
+                        <td>@a.Student</td>
+                        <td>@a.Room</td>
+                        <td>@a.SubmittedText</td>
+                        <td><span class="adm-st adm-st-@a.StageKey">@a.StageLabel</span></td>
+                    </tr>
+                }
+                <tr data-list-empty hidden>
+                    <td colspan="5" class="adm-empty">@(Model.Items.Any() ? "No applications match your search." : "No applications have been submitted yet.")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
