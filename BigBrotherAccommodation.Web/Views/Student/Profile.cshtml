@@ -1,0 +1,53 @@
+@model BigBrother.Web.Models.Profile
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Profile";
+    ViewData["Active"] = "Profile";
+    var full = (Model.FullName ?? "").Trim();
+    var first = full.Contains(' ') ? full.Substring(0, full.IndexOf(' ')) : full;
+    var last = full.Contains(' ') ? full.Substring(full.IndexOf(' ') + 1) : "";
+}
+<form asp-controller="Student" asp-action="Profile" method="post" novalidate data-profile-form>
+    @Html.AntiForgeryToken()
+    <h1 class="ptitle" style="font-size:32px;margin-bottom:18px">Profile &amp; settings</h1>
+    <p class="psub" style="margin:-14px 0 22px">Manage the details associated with your Big Brother account.</p>
+
+    <div class="profile-head">
+        <div class="who">
+            <div class="pav"><svg><use href="#i-user" /></svg></div>
+            <div><b>@(string.IsNullOrWhiteSpace(full) ? "Student" : full)</b><span>Student account</span></div>
+        </div>
+        <button type="button" class="btn btn-edit" data-edit-profile>Edit profile</button>
+    </div>
+
+    <h2 class="sec-h">Personal information</h2>
+    <div class="two" style="gap:72px">
+        <div class="pf muted-l field"><label for="p-first">First name</label><input class="in" id="p-first" name="FirstName" value="@first" readonly data-editable style="height:36px;border-radius:5px;box-shadow:none" required /></div>
+        <div class="pf muted-l field"><label for="p-last">Last name</label><input class="in" id="p-last" name="LastName" value="@last" readonly data-editable style="height:36px;border-radius:5px;box-shadow:none" required /></div>
+        <div class="pf muted-l"><label for="p-email">Email address</label><input class="in" id="p-email" value="@Model.Email" readonly style="height:36px;border-radius:5px;box-shadow:none" /></div>
+        <div class="pf muted-l field"><label for="p-phone">Phone number</label><input class="in" id="p-phone" name="PhoneNumber" type="tel" value="@Model.PhoneNumber" placeholder="+27 00 000 0000" readonly data-editable style="height:36px;border-radius:5px;box-shadow:none" /></div>
+    </div>
+
+    <h2 class="sec-h s" style="margin-top:20px">Student details</h2>
+    <div class="two" style="gap:72px">
+        <div class="pf muted-l"><label for="p-inst">Institution</label><input class="in" id="p-inst" name="Institution" value="@Model.Institution" placeholder="University / College" readonly data-editable style="height:36px;border-radius:5px;box-shadow:none" /></div>
+        <div class="pf muted-l"><label for="p-num">Student number</label><input class="in" id="p-num" name="StudentNumber" value="@Model.StudentNumber" placeholder="Enter student number" readonly data-editable style="height:36px;border-radius:5px;box-shadow:none" /></div>
+    </div>
+    <input type="hidden" name="YearOfStudy" value="@Model.YearOfStudy" />
+    <input type="hidden" name="IsNsfasFunded" value="@(Model.IsNsfasFunded ? "true" : "false")" />
+
+    <div class="sec-row">
+        <div>
+            <h2 class="sec-h s" style="margin-bottom:2px">Account security</h2>
+            <span class="muted" style="font-size:15px">Password: **********</span>
+        </div>
+        <div style="display:grid;gap:6px;width:222px">
+            <a class="btn btn-edit" style="font-size:16px;padding:8px;justify-content:center" asp-controller="Account" asp-action="ChangePassword">Change password</a>
+            <button class="btn btn-primary" style="font-size:16px;font-weight:500;padding:10px" type="submit">Save changes</button>
+        </div>
+    </div>
+</form>
+<form asp-controller="Account" asp-action="Logout" method="post">
+    @Html.AntiForgeryToken()
+    <button class="logout" type="submit">Log out</button>
+</form>

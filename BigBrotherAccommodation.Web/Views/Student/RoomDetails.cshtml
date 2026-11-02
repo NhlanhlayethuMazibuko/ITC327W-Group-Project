@@ -1,0 +1,34 @@
+@model BigBrother.Web.Models.RoomUnit
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = Model.Name;
+    ViewData["Active"] = "Rooms";
+    var photos = UiHelpers.RoomPhotos(Model);
+    var features = (Model.Amenities ?? new List<string>()).Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+    var available = Model.Status == "Available";
+}
+<div class="rd-top" style="margin-top:0">
+    <div class="rd-main" style="background-image:url('@photos[0]')"></div>
+    <div class="rd-side">
+        <div class="t" style="background-image:url('@(photos.Count > 1 ? photos[1] : photos[0])')"></div>
+        <div class="t" style="background-image:url('@(photos.Count > 2 ? photos[2] : photos[photos.Count > 1 ? 1 : 0])')"></div>
+    </div>
+</div>
+<h1 class="rd-h" style="font-size:31px">@(string.IsNullOrWhiteSpace(Model.UnitCode) ? Model.Name : Model.UnitCode)</h1>
+<div class="rd-sub" style="font-size:17px">@Model.Location</div>
+
+<h2 class="rd-info" style="font-size:29px">Room Information</h2>
+<div class="info-grid">
+    <div class="info-box"><b>Room type</b><span>@Model.Name</span></div>
+    <div class="info-box"><b>Price &amp; availability</b><span>@UiHelpers.MoneySpace(Model.PricePerMonth)/pm - @(available ? "available" : Model.Status.ToLowerInvariant())</span></div>
+</div>
+<h2 class="rd-info" style="font-size:29px;margin-top:16px">Features</h2>
+<p class="feat-line" style="font-size:16px">@(features.Any() ? string.Join(" - ", features) : "WiFi - Furnished - Water & Electricity - Safe Parking - Laundry - Security Camera")</p>
+@if (!string.IsNullOrWhiteSpace(Model.Description))
+{
+    <p class="feat-line muted" style="font-size:15px">@Model.Description</p>
+}
+<div class="act-row">
+    <a class="btn btn-primary" style="height:46px" asp-controller="Student" asp-action="BookViewing" asp-route-room="@Model.UnitCode">Book a viewing</a>
+    <a class="btn btn-outline" style="height:46px;border-color:#999" asp-controller="Student" asp-action="Apply" asp-route-roomTypeId="@Model.UnitCode" asp-route-roomTypeName="@Model.Name">Apply now</a>
+</div>

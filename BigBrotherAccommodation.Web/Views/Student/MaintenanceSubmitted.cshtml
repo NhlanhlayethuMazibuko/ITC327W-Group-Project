@@ -1,0 +1,20 @@
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Request submitted";
+    ViewData["Active"] = "Maintenance";
+}
+<div class="done">
+    <div class="circle"><svg><use href="#i-tick" /></svg></div>
+    <h1>Request submitted</h1>
+    <p class="l">Your maintenance report has been sent to management.</p>
+    <div class="refbox">
+        <div class="a">Status: Submitted - @ViewBag.IssueTitle - @ViewBag.Room</div>
+        <div class="b">@ViewBag.Ref</div>
+        <div class="c">Keep this reference to follow up on your request.</div>
+    </div>
+    <div class="notice">Management will review the issue and contact you if they need to arrange access. For urgent safety issues, contact management directly.</div>
+    <div class="acts" style="gap:40px">
+        <a class="btn btn-soft" style="height:54px;font-size:21px" asp-controller="Student" asp-action="Dashboard">Return to dashboard</a>
+        <a class="btn btn-primary" style="height:54px;font-size:21px;font-weight:400" asp-controller="Student" asp-action="Maintenance">View my requests</a>
+    </div>
+</div>

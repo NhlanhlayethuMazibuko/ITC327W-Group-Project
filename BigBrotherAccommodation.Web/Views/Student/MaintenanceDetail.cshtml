@@ -1,0 +1,33 @@
+@model BigBrother.Web.Models.MaintenanceRequest
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Maintenance request";
+    ViewData["Active"] = "Maintenance";
+    var notes = (Model.ResolutionNotes ?? "").Trim();
+}
+<h1 class="ptitle" style="font-size:30px">Maintenance request</h1>
+<p class="psub" style="font-size:13px;margin:2px 0 14px">@Model.ReferenceCode - @UiHelpers.MaintTitle(Model)</p>
+<div class="notice" style="font-size:15px;padding:12px 28px">Urgent safety issue? Contact the management team directly using the emergency contact details provided by management.</div>
+
+<div class="two" style="gap:56px;margin-top:20px">
+    <div class="pf"><label>Room</label><div class="in" style="display:flex;align-items:center;box-shadow:none;border-radius:8px">@Model.RoomUnit</div></div>
+    <div class="pf"><label>Date submitted</label><div class="in" style="display:flex;align-items:center;box-shadow:none;border-radius:8px">@Model.CreatedAt.ToString("dd MMMM yyyy")</div></div>
+</div>
+<div class="pf"><label>Your description</label><div class="in" style="height:86px;padding:12px 24px;white-space:pre-wrap;box-shadow:none;border-radius:8px;color:#555">@UiHelpers.MaintBody(Model)</div></div>
+
+<div class="upd">
+    <h2 style="font:400 22px var(--f-inter);margin:10px 0 0">Updates</h2>
+    <b>Submitted</b>
+    <span>@Model.CreatedAt.ToString("dd MMMM") - Request received by management</span>
+    @if (Model.Status == "In-Progress")
+    {
+        <b>In progress</b>
+        <span>@(string.IsNullOrWhiteSpace(notes) ? "A visit is being arranged. Management will contact you." : notes)</span>
+    }
+    else if (Model.Status == "Completed")
+    {
+        <b>Resolved</b>
+        <span>@(string.IsNullOrWhiteSpace(notes) ? "Your request has been resolved." : notes)</span>
+    }
+</div>
+<a class="btn btn-primary btn-block" style="height:46px;margin-top:34px" asp-controller="Student" asp-action="Maintenance">Back to requests</a>

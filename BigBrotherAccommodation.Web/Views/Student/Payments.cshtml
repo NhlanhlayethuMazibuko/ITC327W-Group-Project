@@ -1,0 +1,61 @@
+@model BigBrother.Web.Models.Application
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Payment instructions";
+    ViewData["Active"] = "Applications";
+    decimal amountDue = ViewBag.AmountDue ?? 0m;
+    DateTime dueDate = ViewBag.DueDate ?? DateTime.Today;
+}
+@if (Model == null)
+{
+    <h1 class="ptitle">Payment instructions</h1>
+    <p class="psub">Payment details become available once your application has been approved.</p>
+    <div class="acts" style="grid-template-columns:260px"><a class="btn btn-primary" asp-controller="Student" asp-action="Applications">My applications</a></div>
+}
+else
+{
+    <form asp-controller="Student" asp-action="SubmitPayment" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="applicationNumber" value="@Model.ApplicationNumber" />
+        <div class="top-r">
+            <div>
+                <h1 class="ptitle">Payment instructions</h1>
+                <p class="psub" style="margin:0 0 10px">Application @Model.ApplicationNumber &nbsp; - &nbsp;Approved</p>
+            </div>
+            <span class="badge-awaiting">Awaiting payment</span>
+        </div>
+        <div class="notice green">Your application has been approved. Choose how you intend to pay. This page records your selection for record keeping, it does not take or process a payment.</div>
+
+        <div class="pay-grid">
+            <div>
+                <div class="pf field"><label for="amount">Amount due</label>
+                    <input class="in" id="amount" name="amount" type="number" step="0.01" min="1" value="@(amountDue > 0 ? amountDue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : "")" placeholder="R ------.--" required /></div>
+                <div class="pf"><label>Payment due date</label><div class="in" style="display:flex;align-items:center;box-shadow:none;color:#555">@UiHelpers.DateLong(dueDate)</div></div>
+                <div class="pf"><label>Payment method</label>
+                    <div class="in" style="height:auto;padding:8px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:none">
+                        <div><div style="font-size:16px">Bank Transfer/ EFT</div><small class="muted" style="font-size:11px">Pay from your own banking app to the owner&rsquo;s account.</small></div>
+                        <span style="border:8px solid transparent;border-top:12px solid #222;margin-top:12px"></span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="bankcard">
+                    @ViewBag.Owner<br />
+                    Big brother student accommodations<br />
+                    Bank Name: @ViewBag.Bank<br />
+                    Account Number: @ViewBag.AccountNumber<br />
+                    Branch Code: @ViewBag.BranchCode<br /><br />
+                    Payment reference: @Model.ApplicationNumber
+                </div>
+                <div class="notice salmon" style="font-size:13px;padding:8px 14px;margin:0">Transfer through your bank directly. Then upload proof of payment in the given space.</div>
+            </div>
+        </div>
+
+        <label class="upload-wide"><input type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png" required /><span class="plus">+</span><span class="fname">Upload receipt or bank proof (PDF, JPG or PNG)</span></label>
+
+        <div class="acts">
+            <a class="btn btn-outline" href="mailto:info@bigbrotherliving.co.za?subject=Payment%20@Model.ApplicationNumber">Contact management</a>
+            <button class="btn btn-primary" type="submit">Save payment preference</button>
+        </div>
+    </form>
+}

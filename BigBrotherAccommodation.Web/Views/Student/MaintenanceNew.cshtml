@@ -1,0 +1,35 @@
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Report a maintenance issue";
+    ViewData["Active"] = "Maintenance";
+}
+<form asp-controller="Student" asp-action="SubmitMaintenance" method="post" enctype="multipart/form-data" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="RoomUnit" value="@ViewBag.RoomUnit" />
+    <h1 class="ptitle" style="font-size:30px">Report a maintenance issue</h1>
+    <p class="psub" style="font-size:14px;margin:2px 0 14px">Tell us what needs attention in your room.</p>
+    <div class="notice" style="font-size:15px;padding:12px 28px">Urgent safety issue? Contact the management team directly using the emergency contact details provided by management.</div>
+
+    <div class="pf field" style="margin-top:20px"><label for="m-cat" style="font-size:19px">Issue category</label>
+        <select class="in" id="m-cat" name="Category" required style="box-shadow:none;height:40px;border-radius:6px;color:#444">
+            <option value="">Select category</option>
+            <option>Plumbing</option><option>Electrical</option><option>Furniture</option>
+            <option>Carpentry</option><option>Security</option><option>General</option>
+        </select></div>
+    <div class="pf field"><label for="m-pri" style="font-size:19px">Priority</label>
+        <select class="in" id="m-pri" name="PriorityChoice" required style="box-shadow:none;height:40px;border-radius:6px;color:#444">
+            <option value="">Routine / Urgent</option>
+            <option value="Routine">Routine</option><option value="Urgent">Urgent</option>
+        </select></div>
+    <div class="pf field"><label for="m-title" style="font-size:19px">Short title</label>
+        <input class="in" id="m-title" name="Title" type="text" maxlength="80" placeholder="e.g. Bathroom tap leaking" required style="box-shadow:none;height:40px;border-radius:6px" /></div>
+    <div class="pf field"><label for="m-desc" style="font-size:19px">Describe the issue</label>
+        <input class="in" id="m-desc" name="Description" type="text" placeholder="Where is the problem? When did it start? What have you noticed?" required style="box-shadow:none;height:40px;border-radius:6px" /></div>
+    <div class="pf"><label style="font-size:19px">Photo (optional)</label>
+        <label class="upload-wide" style="margin-top:0;justify-content:flex-start;padding-left:24px;height:40px;border-style:solid;border-color:#333;border-radius:6px;font-size:15px">
+            <input type="file" name="Photo" accept="image/*" /><span class="plus" style="font-size:22px">+</span><span class="fname">Add photo</span></label></div>
+    <div style="display:flex;justify-content:flex-end;gap:22px;margin-top:22px">
+        <a class="btn btn-outline" style="border-color:#ddd;box-shadow:0 2px 4px rgba(0,0,0,.2);min-width:132px;height:46px" asp-controller="Student" asp-action="Maintenance">Cancel</a>
+        <button class="btn btn-primary" style="min-width:240px;height:46px" type="submit">Submit maintenance request</button>
+    </div>
+</form>

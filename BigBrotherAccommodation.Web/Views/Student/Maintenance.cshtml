@@ -1,0 +1,29 @@
+@model List<BigBrother.Web.Models.MaintenanceRequest>
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Maintenance";
+    ViewData["Active"] = "Maintenance";
+}
+<div class="top-r">
+    <div>
+        <h1 class="ptitle" style="font-size:30px">My maintenance requests</h1>
+        <p class="psub" style="font-size:14px;margin-top:4px">Follow progress and read updates from management.</p>
+    </div>
+    <a class="btn btn-primary" style="min-width:160px;height:50px;font-size:15px;box-shadow:0 2px 4px rgba(0,0,0,.25)" asp-controller="Student" asp-action="MaintenanceNew">New request</a>
+</div>
+@if (!Model.Any())
+{
+    <p class="muted" style="margin-top:34px">You haven&rsquo;t reported any maintenance issues yet.</p>
+}
+@foreach (var m in Model)
+{
+    <div class="mrow">
+        <div>
+            <h3>@UiHelpers.MaintTitle(m)</h3>
+            <small>@m.ReferenceCode - @m.RoomUnit - Submitted @m.CreatedAt.ToString("d MMMM")</small>
+        </div>
+        <span class="status-pill">@UiHelpers.MaintLabel(m.Status)</span>
+        <div></div>
+        <a class="btn btn-outline" style="justify-self:end;border-color:#ddd;font-weight:400;font-size:17px;box-shadow:0 2px 4px rgba(0,0,0,.2);padding:9px 40px" asp-controller="Student" asp-action="MaintenanceDetail" asp-route-id="@m.Id">View request</a>
+    </div>
+}
