@@ -1,0 +1,69 @@
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Room application";
+    ViewData["Active"] = "Applications";
+    string roomName = (ViewBag.RoomTypeName as string) ?? "";
+    if (roomName == "Student Accommodation") { roomName = ""; }
+}
+<form asp-controller="Student" asp-action="Apply" method="post" enctype="multipart/form-data" data-wizard novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="RoomTypeId" value="@ViewBag.RoomTypeId" />
+
+    <section data-step="1">
+        <h1 class="ptitle">Room application</h1>
+        <p class="psub" style="margin:0 0 20px">Complete your details to apply for accommodation</p>
+        <div class="step-l">Step 1 of 2: Student details</div>
+        <div class="progress"><i style="width:66%"></i></div>
+
+        <div class="pf field"><label for="a-name">Full name</label><input class="in" id="a-name" name="StudentName" type="text" value="@ViewBag.StudentName" placeholder="Enter your full name" required /></div>
+        <div class="pf field"><label for="a-email">Email address</label><input class="in" id="a-email" name="Email" type="email" value="@ViewBag.StudentEmail" placeholder="Enter your email" required /></div>
+        <div class="pf field"><label for="a-phone">Phone number</label><input class="in" id="a-phone" name="PhoneNumber" type="tel" value="@ViewBag.StudentPhone" placeholder="Enter your phone number" required /></div>
+        <div class="pf field"><label for="a-inst">Institution / campus</label><input class="in" id="a-inst" name="Institution" type="text" value="@ViewBag.StudentInstitution" placeholder="Enter your institution" required /></div>
+        <div class="pf field"><label for="a-room">Preferred room</label><input class="in" id="a-room" name="RoomTypeName" type="text" value="@roomName" placeholder="Enter your preferred room" required /></div>
+        <div class="acts">
+            <a class="btn btn-outline" asp-controller="Student" asp-action="Rooms">Back</a>
+            <button class="btn btn-primary" type="button" data-go="2">Review details</button>
+        </div>
+    </section>
+
+    <section data-step="2" hidden>
+        <h1 class="ptitle">Room application</h1>
+        <p class="psub" style="margin:0 0 26px">Complete your details to apply for accommodation</p>
+        <div class="docs-h">Supporting documents</div>
+        <p class="small muted" style="margin:0 0 10px">Upload clear, readable files requested for this application.</p>
+        <div class="docrow">
+            <div><b>ID or passport</b><small>PDF, JPG or PNG &nbsp;-&nbsp; Max 10 MB</small></div>
+            <label class="choose"><input type="file" name="IdDocument" accept=".pdf,.jpg,.jpeg,.png" data-required-file="ID or passport" /><span>+ Choose file</span></label>
+        </div>
+        <div class="docrow">
+            <div><b>Proof of registration or admission</b><small>Current academic year - PDF, JPG, or PNG<br />Max 10 MB</small></div>
+            <label class="choose"><input type="file" name="ProofOfRegistration" accept=".pdf,.jpg,.jpeg,.png" data-required-file="Proof of registration or admission" /><span>+ Choose file</span></label>
+        </div>
+        <div class="docrow" style="padding:20px 0">
+            <div><b>Proof of income / Bursary details</b></div>
+            <label class="choose"><input type="file" name="FundingApproval" accept=".pdf,.jpg,.jpeg,.png" /><span>+ Choose file</span></label>
+        </div>
+        <p class="field-err" data-doc-err style="font-size:14px;margin:10px 0 0"></p>
+        <div class="notice">Privacy: Upload only documents requested for your application. You can replace a file before submitting. Management will review these documents with your application.</div>
+        <div class="acts">
+            <button class="btn btn-outline" type="button" data-save-draft>Save draft</button>
+            <button class="btn btn-primary" type="button" data-go="3">Continue to review</button>
+        </div>
+    </section>
+
+    <section data-step="3" hidden>
+        <h1 class="ptitle">Room application</h1>
+        <p class="psub" style="margin:0 0 20px">Check your details before submitting your application</p>
+        <div class="step-l">Step 2 of 2</div>
+        <div class="progress"><i style="width:100%"></i></div>
+        <div class="pf"><label>Full name</label><div class="in" data-review="StudentName" style="display:flex;align-items:center"></div></div>
+        <div class="pf"><label>Email address</label><div class="in" data-review="Email" style="display:flex;align-items:center"></div></div>
+        <div class="pf"><label>Phone number</label><div class="in" data-review="PhoneNumber" style="display:flex;align-items:center"></div></div>
+        <div class="pf"><label>Institution / campus</label><div class="in" data-review="Institution" style="display:flex;align-items:center"></div></div>
+        <div class="pf"><label>Preferred room</label><div class="in" data-review="RoomTypeName" style="display:flex;align-items:center"></div></div>
+        <div class="acts">
+            <button class="btn btn-outline" type="button" data-go="2">Back</button>
+            <button class="btn btn-primary" type="submit">Submit application</button>
+        </div>
+    </section>
+</form>

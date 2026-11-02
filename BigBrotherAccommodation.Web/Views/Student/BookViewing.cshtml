@@ -1,0 +1,29 @@
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Book a viewing";
+    ViewData["Active"] = "Viewings";
+    var times = new[] { "09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00" };
+    var minDate = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
+}
+<form asp-controller="Student" asp-action="BookViewing" method="post" novalidate>
+    @Html.AntiForgeryToken()
+    <h1 class="ptitle">Book a viewing</h1>
+    <p class="psub" style="margin:0 0 26px">Choose a preferred date and time for a room visit.</p>
+    <div class="pf field"><label for="v-date">Preferred date</label><input class="in" id="v-date" name="ViewingDate" type="date" min="@minDate" required /></div>
+    <div class="pf"><label>Preferred time</label>
+        <div class="two g20" style="gap:74px">
+            <div class="field"><select class="in" name="PreferredTime" aria-label="Preferred time" required>
+                <option value="">Choose a time</option>
+                @foreach (var t in times) { <option value="@t">@t</option> }
+            </select></div>
+            <div class="field"><select class="in" name="AlternativeTime" aria-label="Alternative time">
+                <option value="">Alternative time</option>
+                @foreach (var t in times) { <option value="@t">@t</option> }
+            </select></div>
+        </div>
+    </div>
+    <div class="pf field"><label for="v-phone">Your contact number</label><input class="in" id="v-phone" name="PhoneNumber" type="tel" value="@ViewBag.Phone" placeholder="Enter your phone number" required /></div>
+    <div class="pf"><label for="v-msg">Message (optional)</label><textarea class="in" id="v-msg" name="Message" placeholder="Add any helpful details"></textarea></div>
+    <div class="pf field"><label for="v-room">Preferred room</label><input class="in" id="v-room" name="RoomType" type="text" value="@ViewBag.Room" placeholder="Enter your preferred room" required /></div>
+    <button class="btn btn-primary btn-block" style="height:46px;margin-top:22px" type="submit">Send viewing request</button>
+</form>

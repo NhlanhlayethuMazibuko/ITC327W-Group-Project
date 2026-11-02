@@ -1,0 +1,70 @@
+@model List<BigBrother.Web.Models.Application>
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "My Applications";
+    ViewData["Active"] = "Applications";
+    var sel = ViewBag.Selected as BigBrother.Web.Models.Application;
+    var rejectedNotices = ViewBag.RejectedNotices as List<BigBrother.Web.Models.Application> ?? new List<BigBrother.Web.Models.Application>();
+}
+@if (rejectedNotices.Count > 0)
+{
+    foreach (var rej in rejectedNotices)
+    {
+        <div class="stat-banner rejected" style="background:#FDE8E8;border:1px solid #E5484D;color:#8A1C1C;margin-bottom:14px;display:block">
+            <b style="display:block;font-size:18px;margin-bottom:4px">Application #@rej.ApplicationNumber was rejected</b>
+            <span style="display:block">Your application for @rej.RoomTypeName was not approved. It will be automatically removed from your applications.</span>
+        </div>
+    }
+}
+@if (sel == null)
+{
+    <h1 class="ptitle">My application</h1>
+    <p class="psub">You have not submitted an application yet.</p>
+    <div class="acts" style="grid-template-columns:260px;margin-top:10px">
+        <a class="btn btn-primary" asp-controller="Student" asp-action="Rooms">Browse rooms</a>
+    </div>
+}
+else
+{
+    var step = UiHelpers.AppStep(sel.Status);
+    <h1 class="ptitle">My application</h1>
+    <p class="psub" style="margin-bottom:12px">Application #@sel.ApplicationNumber Submitted @UiHelpers.DateLong(sel.CreatedAt)</p>
+
+    <div class="stat-banner @UiHelpers.AppBannerClass(sel.Status)">
+        <b>Status: @UiHelpers.AppStatusLabel(sel.Status)</b>
+        <span>Big Brother - @sel.RoomTypeName</span>
+    </div>
+
+    <div class="tracker" aria-label="Application progress">
+        <div class="n @(step >= 1 ? "done" : "")"><span class="dot">1</span>Submitted</div>
+        <div class="bar @(step >= 2 ? "done" : "")"></div>
+        <div class="n @(step >= 2 ? "done" : "")"><span class="dot">2</span>Reviewing</div>
+        <div class="bar @(step >= 3 ? "done" : "")"></div>
+        <div class="n @(step >= 3 ? "done" : "")"><span class="dot">3</span>Decision</div>
+    </div>
+
+    <h2 class="h2" style="margin-top:34px">Personal details</h2>
+    <div class="two" style="gap:56px;margin-top:8px">
+        <div class="in ro" style="display:flex;align-items:center;font-size:20px;color:#777;box-shadow:none;border-color:#000">@sel.StudentName</div>
+        <div class="in ro" style="display:flex;align-items:center;font-size:20px;color:#777;box-shadow:none;border-color:#000">@sel.Email</div>
+    </div>
+    <div style="display:flex;gap:14px;margin-top:22px;flex-wrap:wrap">
+        <a class="btn btn-soft" style="min-width:260px;height:54px;font-size:22px" href="mailto:info@bigbrotherliving.co.za?subject=Application%20@sel.ApplicationNumber">Contact support</a>
+        @if (sel.Status == "Approved")
+        {
+            <a class="btn btn-primary" style="min-width:260px;height:54px;font-size:20px;font-weight:500" asp-controller="Student" asp-action="Payments" asp-route-applicationNumber="@sel.ApplicationNumber">Payment instructions</a>
+        }
+    </div>
+
+    @if (Model.Count > 1)
+    {
+        <h2 class="h2" style="margin-top:36px;font-size:22px">Other applications</h2>
+        @foreach (var o in Model.Where(m => m.Id != sel.Id))
+        {
+            <a class="attn" style="margin-bottom:8px" asp-controller="Student" asp-action="Applications" asp-route-id="@o.Id">
+                <span class="l"><span class="d"></span><span><b style="font-size:18px">@o.ApplicationNumber</b><small>@o.RoomTypeName - @UiHelpers.DateLong(o.CreatedAt)</small></span></span>
+                <span style="font:600 14px var(--f-inter);color:#444">@UiHelpers.AppStatusLabel(o.Status)</span>
+            </a>
+        }
+    }
+}

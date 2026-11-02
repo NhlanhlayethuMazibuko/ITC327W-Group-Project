@@ -1,0 +1,20 @@
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Request submitted";
+    ViewData["Active"] = "Applications";
+}
+<div class="done">
+    <div class="circle"><svg><use href="#i-tick" /></svg></div>
+    <h1>Request submitted</h1>
+    <p class="l">Your application has been sent!</p>
+    <div class="refbox">
+        <div class="a">Application @ViewBag.Ref Submitted @ViewBag.Date</div>
+        <div class="b">@ViewBag.Ref</div>
+        <div class="c">Keep this reference for your records.</div>
+    </div>
+    <p class="l">You can check updates in your student portal.</p>
+    <div class="stack">
+        <a class="btn btn-primary" asp-controller="Student" asp-action="Applications">View my applications</a>
+        <a class="btn btn-soft" asp-controller="Student" asp-action="Dashboard">Return to dashboard</a>
+    </div>
+</div>

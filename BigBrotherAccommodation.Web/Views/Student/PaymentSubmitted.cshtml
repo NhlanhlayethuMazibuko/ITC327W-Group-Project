@@ -1,0 +1,27 @@
+@model BigBrother.Web.Models.PaymentRecord
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Payment submitted";
+    ViewData["Active"] = "Applications";
+}
+<h1 class="ptitle">Payment submitted</h1>
+<p class="psub" style="margin:0 0 10px">We&rsquo;ve received your payment report.</p>
+<div class="notice green" style="padding:12px 28px">
+    @if (Model.Status == "Verified") { <span>Payment verified<br />Management has confirmed your payment. Thank you.</span> }
+    else if (Model.Status == "Rejected") { <span>Payment could not be verified<br />Please contact management with your proof of payment.</span> }
+    else { <span>Awaiting staff verification<br />Your EFT is not confirmed yet. Management will check the business account and update status.</span> }
+</div>
+<div class="cardb" style="margin-top:22px;line-height:1.5;padding:14px 22px;border-color:#555">
+    <small style="font-size:16px;color:#555">Payment reference</small>
+    <div style="font-size:24px;margin:2px 0 6px">@Model.ReferenceCode</div>
+    <div style="font-size:16px;color:#555">Application @Model.ApplicationNumber - @Model.PaymentMethod</div>
+</div>
+<div class="two g20" style="margin-top:34px;gap:50px">
+    <div class="pf"><label style="font-size:17px">Reported amount</label><div class="in" style="display:flex;align-items:center;box-shadow:none">@UiHelpers.MoneySpace(Model.Amount)</div></div>
+    <div class="pf"><label style="font-size:17px">Reported on</label><div class="in" style="display:flex;align-items:center;box-shadow:none">@Model.CreatedAt.ToString("d MMMM yyyy, HH:mm")</div></div>
+</div>
+<div class="notice salmon" style="margin-top:24px">Keep your bank proof for your records. Uploading proof does not mean the funds have cleared.</div>
+<div class="acts">
+    <a class="btn btn-outline" asp-controller="Student" asp-action="Applications">Back to application</a>
+    <a class="btn btn-primary" asp-controller="Student" asp-action="PaymentSubmitted" asp-route-applicationNumber="@Model.ApplicationNumber">View payment status</a>
+</div>

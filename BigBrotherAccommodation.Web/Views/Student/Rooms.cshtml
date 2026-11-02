@@ -1,0 +1,48 @@
+@model List<BigBrother.Web.Models.RoomUnit>
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Browse Rooms";
+}
+<div data-filter>
+    <h1 class="ptitle">Browse rooms</h1>
+    <div class="filters-row" style="margin-top:14px">
+        <label class="search" style="font-size:19px">
+            <svg><use href="#i-search" /></svg>
+            <input type="search" data-f-search placeholder="Search by type of room" aria-label="Search by type of room" />
+        </label>
+        <a class="btn btn-primary" href="#filters" style="min-width:134px;font-size:20px;font-weight:400">Filters</a>
+    </div>
+    <p class="muted small" style="margin:22px 0 0">Showing available rooms</p>
+
+    <div class="room-grid" style="gap:28px 40px">
+        @foreach (var r in Model)
+        {
+            var type = UiHelpers.RoomType(r);
+            var priceAttr = Convert.ToInt32(r.PricePerMonth).ToString();
+            var searchAttr = string.Join(" ", new[] { r.Name, r.UnitCode, type, r.Location }).ToLowerInvariant();
+            <article class="rcard" data-item data-type="@type" data-price="@priceAttr" data-search="@searchAttr">
+                <div class="ph" style="background-image:url('@UiHelpers.RoomPhoto(r)')"></div>
+                <h3>@(string.IsNullOrWhiteSpace(r.UnitCode) ? "Unit" : r.UnitCode)</h3>
+                <div class="nm">@r.Name</div>
+                <div class="row">
+                    <a class="btn btn-primary" asp-controller="Student" asp-action="RoomDetails" asp-route-id="@r.Id">View details</a>
+                    <span class="pill @(r.Status == "Available" ? "" : "occ")">@r.Status</span>
+                </div>
+            </article>
+        }
+    </div>
+    @{ var emptyHidden = Model.Any(); }
+    <p class="muted center" data-empty hidden="@emptyHidden" style="margin:30px 0">No rooms match your search.</p>
+
+    <div class="sel-row" id="filters" style="margin-top:22px">
+        <select class="bb" data-f-price aria-label="Price">
+            <option value="">Price: Any</option>
+            <option value="5000-5000">R5000 / month</option>
+        </select>
+        <select class="bb" data-f-select="type" aria-label="Room type">
+            <option value="">Room type: All</option>
+            <option value="Single">Single</option>
+            <option value="Sharing">Sharing</option>
+        </select>
+    </div>
+</div>

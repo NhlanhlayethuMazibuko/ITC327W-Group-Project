@@ -1,0 +1,74 @@
+@model List<BigBrother.Web.Models.Announcement>
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Notifications";
+    ViewData["Active"] = "Notifications";
+    var lastSeen = ViewBag.LastSeen as DateTime? ?? DateTime.MinValue;
+    bool IsUnread(BigBrother.Web.Models.Announcement a) => a.CreatedAt > lastSeen;
+    var unreadCount = Model.Count(IsUnread);
+    var today = Model.Where(a => a.CreatedAt.ToLocalTime().Date == DateTime.Today).ToList();
+    var earlier = Model.Where(a => a.CreatedAt.ToLocalTime().Date != DateTime.Today).ToList();
+    string When(DateTime d)
+    {
+        var l = d.ToLocalTime();
+        if (l.Date == DateTime.Today) return l.ToString("HH:mm");
+        var days = (DateTime.Today - l.Date).Days;
+        return days == 1 ? "Yesterday" : days < 7 ? days + " days ago" : l.ToString("d MMM yyyy");
+    }
+    (string, string)? LinkFor(BigBrother.Web.Models.Announcement a)
+    {
+        var t = (a.Title + " " + a.Content).ToLowerInvariant();
+        if (t.Contains("viewing")) return ("View booking details", "Viewings");
+        if (t.Contains("payment")) return ("View payment details", "Applications");
+        if (t.Contains("application")) return ("Track application", "Applications");
+        if (t.Contains("room") || t.Contains("available")) return ("Browse rooms", "Rooms");
+        if (t.Contains("maintenance")) return ("View maintenance", "Maintenance");
+        return null;
+    }
+}
+<h1 class="ptitle">Personal details</h1>
+<p class="psub" style="margin-bottom:22px">Updates about your applications, viewings and accommodation.</p>
+
+<div class="top-r" style="align-items:center">
+    <div class="chips" data-chips>
+        <button type="button" class="chip on" data-chip="all">All</button>
+        <button type="button" class="chip" data-chip="unread">Unread (@unreadCount)</button>
+    </div>
+    <form asp-controller="Student" asp-action="MarkNotificationsRead" method="post">
+        @Html.AntiForgeryToken()
+        <button class="mark-all" type="submit">Mark all as read</button>
+    </form>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="muted" style="margin-top:24px">You&rsquo;re all caught up. New updates will appear here.</p>
+}
+@if (today.Any())
+{
+    <h2 class="ngroup">Today</h2>
+    @foreach (var a in today) { @RenderItem(a) }
+}
+@if (earlier.Any())
+{
+    <h2 class="ngroup" style="margin-top:34px">Earlier</h2>
+    @foreach (var a in earlier) { @RenderItem(a) }
+}
+
+@{
+    Microsoft.AspNetCore.Html.IHtmlContent RenderItem(BigBrother.Web.Models.Announcement a)
+    {
+        var unread = IsUnread(a);
+        var link = LinkFor(a);
+        var sb = new System.Text.StringBuilder();
+        sb.Append("<div class=\"ni").Append(unread ? " unread" : "").Append("\" data-unread=\"").Append(unread ? "1" : "0").Append("\">");
+        sb.Append("<span class=\"d\"></span><div class=\"b\"><b>").Append(System.Net.WebUtility.HtmlEncode(a.Title)).Append("</b>");
+        sb.Append("<span>").Append(System.Net.WebUtility.HtmlEncode(a.Content)).Append("</span>");
+        if (link != null)
+        {
+            sb.Append("<a href=\"").Append(Url.Action(link.Value.Item2, "Student")).Append("\">").Append(link.Value.Item1).Append("</a>");
+        }
+        sb.Append("</div><time>").Append(When(a.CreatedAt)).Append("</time></div>");
+        return new Microsoft.AspNetCore.Html.HtmlString(sb.ToString());
+    }
+}

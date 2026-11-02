@@ -1,0 +1,54 @@
+@model BigBrother.Web.Models.StudentDashboardViewModel
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "Dashboard";
+    var latest = Model.LatestApplication;
+    string head = "Your application is under review", sub = "We will notify you when a decision is made.";
+    if (latest != null)
+    {
+        if (latest.Status == "Approved") { head = "Your application has been accepted"; sub = "Open My Applications to see your payment instructions."; }
+        else if (latest.Status == "Rejected") { head = "Your application was declined"; sub = "Contact support if you would like more information."; }
+    }
+    var rooms = Model.Rooms.OrderBy(r => r.Status == "Available" ? 0 : 1).Take(3).ToList();
+}
+<h1 class="ptitle">Welcome back, @UiHelpers.FirstName(Model.StudentName)</h1>
+<p class="psub" style="margin-top:14px">Find a comfortable place to call home</p>
+
+@if (latest != null)
+{
+    <div class="banner">
+        <svg><use href="#i-mega" /></svg>
+        <div><b>@head</b><span>@sub</span></div>
+    </div>
+}
+
+<h2 class="h2">Quick Actions</h2>
+<div class="tiles3">
+    <a class="qa" asp-controller="Student" asp-action="Rooms"><b>Browse rooms</b><span>Explore availability</span></a>
+    <a class="qa" asp-controller="Student" asp-action="Applications"><b>Track application</b><span>View current progress</span></a>
+    <a class="qa" asp-controller="Student" asp-action="BookViewing"><b>Book a viewing</b><span>Choose a date and time</span></a>
+</div>
+
+<h2 class="h2" style="margin-top:30px">Room Availability</h2>
+@if (rooms.Any())
+{
+    <div class="ucards">
+        @foreach (var r in rooms)
+        {
+            <div class="ucard">
+                <div class="ph" style="background-image:url('@UiHelpers.RoomPhoto(r)')"></div>
+                <div class="u">@(string.IsNullOrWhiteSpace(r.UnitCode) ? "Unit" : r.UnitCode)</div>
+                <div class="n">@r.Name</div>
+                <div class="p">@UiHelpers.MoneyComma(r.PricePerMonth)/Month</div>
+                <div class="r">
+                    <span class="pill @(r.Status == "Available" ? "" : "occ")">@r.Status</span>
+                    <a class="btn btn-primary" asp-controller="Student" asp-action="RoomDetails" asp-route-id="@r.Id">View Details</a>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="muted">No rooms are listed yet. Please check back soon.</p>
+}

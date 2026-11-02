@@ -1,0 +1,51 @@
+@model List<BigBrother.Web.Models.ViewingBooking>
+@{
+    Layout = "_StudentLayout";
+    ViewData["Title"] = "My viewings";
+    ViewData["Active"] = "Viewings";
+    var rooms = ViewBag.Rooms as List<BigBrother.Web.Models.RoomUnit> ?? new List<BigBrother.Web.Models.RoomUnit>();
+    var upcoming = Model.Where(UiHelpers.ViewingIsUpcoming).OrderBy(v => v.ViewingDate).ToList();
+    var past = Model.Where(v => !UiHelpers.ViewingIsUpcoming(v)).OrderByDescending(v => v.ViewingDate).ToList();
+}
+@functions {
+    static BigBrother.Web.Models.RoomUnit? Match(List<BigBrother.Web.Models.RoomUnit> rooms, string t) =>
+        rooms.FirstOrDefault(r => string.Equals(r.Name, t, StringComparison.OrdinalIgnoreCase) || string.Equals(r.UnitCode, t, StringComparison.OrdinalIgnoreCase));
+}
+<h1 class="ptitle" style="font-size:30px">My viewings</h1>
+<p class="psub" style="margin-bottom:10px;font-size:14px">See your viewing requests and their latest status.</p>
+<div class="vtabs"><a class="on" href="#upcoming">Upcoming</a><a href="#past">Past requests</a></div>
+
+<h2 class="h2" id="upcoming" style="margin:8px 0 0">Upcoming viewing</h2>
+@if (!upcoming.Any()) { <p class="muted" style="margin:10px 0 20px">No upcoming viewings. Request one below.</p> }
+@foreach (var v in upcoming)
+{
+    var m = Match(rooms, v.RoomType);
+    <div class="vcard">
+        <div>
+            <div class="u">Unit</div>
+            <div class="n">@v.RoomType</div>
+            <div style="font-size:15px">@(m != null ? UiHelpers.MoneyComma(m.PricePerMonth) + "/Month" : UiHelpers.DateLong(v.ViewingDate) + ", " + v.PreferredTime)</div>
+            <span class="pill" style="margin-top:4px">@UiHelpers.ViewingLabel(v.Status)</span>
+        </div>
+        <img class="lg" src="~/images/logo_official.png" alt="" />
+        <div class="rt"><a class="btn btn-primary btn-sm" asp-controller="Student" asp-action="@(m != null ? "RoomDetails" : "Rooms")" asp-route-id="@(m?.Id)">View Details</a></div>
+    </div>
+}
+
+<h2 class="h2" id="past" style="margin:8px 0 0">Past viewings</h2>
+@if (!past.Any()) { <p class="muted" style="margin:10px 0 20px">No past viewings yet.</p> }
+@foreach (var v in past)
+{
+    var m = Match(rooms, v.RoomType);
+    <div class="vcard">
+        <div>
+            <div class="u">Unit</div>
+            <div class="n">@v.RoomType</div>
+            <div style="font-size:15px">@(m != null ? UiHelpers.MoneyComma(m.PricePerMonth) + "/Month" : UiHelpers.DateLong(v.ViewingDate) + ", " + v.PreferredTime)</div>
+            <span class="pill @(v.Status == "Cancelled" ? "occ" : "")" style="margin-top:4px">@UiHelpers.ViewingLabel(v.Status)</span>
+        </div>
+        <img class="lg" src="~/images/logo_official.png" alt="" />
+        <div class="rt"><a class="btn btn-primary btn-sm" asp-controller="Student" asp-action="@(m != null ? "RoomDetails" : "Rooms")" asp-route-id="@(m?.Id)">View Details</a></div>
+    </div>
+}
+<a class="btn btn-primary btn-block" style="height:54px;font-size:22px;font-weight:400;margin-top:26px" asp-controller="Student" asp-action="BookViewing">Request another viewing</a>
