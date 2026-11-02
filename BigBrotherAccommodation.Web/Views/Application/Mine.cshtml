@@ -1,0 +1,65 @@
+﻿@model MyApplicationViewModel
+@{
+    ViewData["Title"] = "My application";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">My application</h1>
+
+    @if (TempData["Message"] is string message)
+    {
+        <div class="ap-ok">@message</div>
+    }
+
+    @if (Model.App == null)
+    {
+        @if (Model.Draft != null)
+        {
+            <p class="ap-sub">You started an application but haven’t submitted it yet.</p>
+            <a asp-controller="Application" asp-action="Details" class="ap-btn ap-narrow ap-left-btn">Continue your application</a>
+        }
+        else
+        {
+            <p class="ap-sub">You haven’t applied for a room yet. Find a room you like and choose Apply now.</p>
+            <a asp-controller="Student" asp-action="Rooms" class="ap-btn ap-narrow ap-left-btn">Browse rooms</a>
+        }
+    }
+    else
+    {
+        var app = Model.App;
+        var state = app.Status == "accepted" ? "accepted" : app.Status == "declined" ? "declined" : "review";
+        var headline = state == "accepted" ? "Accepted" : state == "declined" ? "Declined" : "Under review";
+        var step = app.Status == "submitted" ? 1 : app.Status == "reviewing" ? 2 : 3;
+
+        <p class="ap-sub">Application @app.Reference Submitted @(app.SubmittedAt?.ToLocalTime().ToString("d MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))</p>
+
+        <div class="ap-status @state">
+            <h2>Status: @headline</h2>
+            <span>Big Brother - @app.PreferredRoom</span>
+        </div>
+
+        <div class="ap-track">
+            <div class="ap-step on"><div class="dot">1</div>Submitted</div>
+            <div class="ap-line @(step >= 2 ? "on" : "")"></div>
+            <div class="ap-step @(step >= 2 ? "on" : "")"><div class="dot">2</div>Reviewing</div>
+            <div class="ap-line @(step >= 3 ? "on" : "")"></div>
+            <div class="ap-step @(step >= 3 ? "on" : "")"><div class="dot">3</div>Decision</div>
+        </div>
+
+        <h2 class="ap-h2">Personal details</h2>
+        <div class="ap-two">
+            <div class="ap-field"><input value="@app.FullName" readonly /></div>
+            <div class="ap-field"><input value="@app.Email" readonly /></div>
+        </div>
+
+        <div class="ap-row-buttons">
+            @if (app.Status == "accepted")
+            {
+                <a asp-controller="Application" asp-action="Payment" asp-route-id="@app.Id" class="ap-btn ap-narrow">Payment instructions</a>
+            }
+            <a href="https://wa.me/27738313462" target="_blank" rel="noopener" class="ap-btn-soft ap-narrow">Contact support</a>
+        </div>
+    }
+</div>

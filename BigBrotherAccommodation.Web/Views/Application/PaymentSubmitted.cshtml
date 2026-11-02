@@ -1,0 +1,40 @@
+﻿@model PaymentSubmittedViewModel
+@{
+    ViewData["Title"] = "Payment submitted";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap ap-wide">
+    <h1 class="ap-title">Payment submitted</h1>
+    <p class="ap-sub">We’ve received your payment report.</p>
+
+    <div class="ap-green">
+        <strong>Awaiting staff verification</strong><br />
+        Your EFT is not confirmed yet. Management will check the business account and update status.
+    </div>
+
+    <div class="pay-refcard">
+        <small>Payment reference</small>
+        <strong>@Model.Payment.Reference</strong>
+        <small>Application @Model.App.Reference - Bank transfer/EFT</small>
+    </div>
+
+    <div class="ap-two">
+        <div class="ap-field">
+            <label>Reported amount</label>
+            <input value="@Model.AmountText" readonly />
+        </div>
+        <div class="ap-field">
+            <label>Reported on</label>
+            <input value="@Model.ReportedOnText" readonly />
+        </div>
+    </div>
+
+    <div class="pay-note">Keep your bank proof for your records. Uploading proof does not mean the funds have cleared.</div>
+
+    <div class="ap-buttons">
+        <a asp-controller="Application" asp-action="Mine" class="ap-btn-outline">Back to application</a>
+        <a asp-controller="Student" asp-action="Dashboard" class="ap-btn">Back to dashboard</a>
+    </div>
+</div>

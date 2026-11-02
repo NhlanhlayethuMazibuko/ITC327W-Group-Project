@@ -1,0 +1,22 @@
+﻿@model ApplicationRecord
+@{
+    ViewData["Title"] = "Request submitted";
+    ViewData["Active"] = "applications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-done">
+    <div class="ap-check"><i class="bi bi-check-lg"></i></div>
+    <h1>Request submitted</h1>
+
+    <p class="ap-left">Your application has been sent!</p>
+    <div class="ap-ref">
+        <small>Application @Model.Reference Submitted @(Model.SubmittedAt?.ToLocalTime().ToString("d MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))</small>
+        <strong>@Model.Reference</strong>
+        <small>Keep this reference for your records.</small>
+    </div>
+    <p class="ap-left">You can check updates in your student portal.</p>
+
+    <a asp-controller="Application" asp-action="Mine" class="ap-btn ap-narrow">View my applications</a>
+    <a asp-controller="Student" asp-action="Dashboard" class="ap-btn-soft ap-narrow">Return to dashboard</a>
+</div>
