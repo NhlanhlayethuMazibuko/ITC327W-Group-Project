@@ -28,4 +28,24 @@ The project will involve developing:
 - NP Khotle : 218013010
 - JO Molaba : 224067603
 
+## Technology
 
+- Flutter 3 / Dart, `supabase_flutter`
+- ASP.NET Core MVC (.NET 9), Supabase C# client + REST
+- Supabase: PostgreSQL database, Auth, Storage, Row-Level Security
+
+## Running the web app (`web/`)
+
+Requirements: .NET 9 SDK, Visual Studio 2022 (or `dotnet` CLI).
+
+1. Open `web/BigBrotherAccommodation.Web.sln`.
+2. Add the Supabase settings as **user secrets** (never in `appsettings.json`):
+   right-click the project → *Manage User Secrets* and add:
+   ```json
+   {
+     "Supabase": { "Url": "...", "Key": "<publishable key>", "ServiceKey": "<service/secret key>" },
+     "Payment": { "AccountHolder": "...", "BankName": "...", "AccountNumber": "...", "BranchCode": "..." }
+   }
+   ```
+   Ask the project owner for the values.
+3. Run (F5) or `dotnet run`. The site opens on `https://localhost:7067`.
