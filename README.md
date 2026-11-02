@@ -34,6 +34,11 @@ The project will involve developing:
 - ASP.NET Core MVC (.NET 9), Supabase C# client + REST
 - Supabase: PostgreSQL database, Auth, Storage, Row-Level Security
 
+## Design links
+
+- Flutter wireframes (Figma): https://www.figma.com/design/wn4Il8WEIqOOEAMzvopEw1/Big-Brother-Student-accommodation-App?node-id=0-1&t=hWt4ymWWTZoOWg4z-1
+- ASP.NET wireframes (Figma): https://www.figma.com/design/nsfe2RnSzAZCK1aHrkBLQn/Big-Brother-Student-Accom.?node-id=2479-2&t=nrbgrirBogvxMSpF-1
+
 ## Running the web app (`web/`)
 
 Requirements: .NET 9 SDK, Visual Studio 2022 (or `dotnet` CLI).
@@ -49,3 +54,9 @@ Requirements: .NET 9 SDK, Visual Studio 2022 (or `dotnet` CLI).
    ```
    Ask the project owner for the values.
 3. Run (F5) or `dotnet run`. The site opens on `https://localhost:7067`.
+
+## Shared processes (Flutter - Supabase - ASP.NET)
+
+1. **Application:** a student applies in the app, the application is stored in Supabase, and management reviews it on the website.
+2. **Approval:** management approves on the website, the room is marked occupied (other applicants declined), and the app shows "Approved".
+3. **Maintenance:** a tenant reports an issue in the app, management updates its status on the website, and the student sees the update.
