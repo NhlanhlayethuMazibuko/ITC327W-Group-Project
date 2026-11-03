@@ -23,7 +23,7 @@
     </div>
 
     <h1 class="list-title mt-4">@Model.Room.Name</h1>
-    <p class="small-text">Universitas</p>
+    <p class="small-text"><i class="bi bi-geo-alt"></i> @(string.IsNullOrWhiteSpace(Model.Room.Location) ? "50 Besselsen St, Universitas, Bloemfontein" : Model.Room.Location)</p>
 
     <h2 class="detail-heading">Room Information</h2>
     <div class="row g-3">

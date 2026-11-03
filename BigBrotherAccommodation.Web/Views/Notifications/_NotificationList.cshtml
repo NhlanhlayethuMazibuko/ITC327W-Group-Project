@@ -1,0 +1,20 @@
+﻿@model List<NotificationItem>
+
+@foreach (var item in Model)
+{
+    var n = item.Record;
+    <div class="nt-item @(n.IsRead ? "read" : "unread")">
+        <span class="nt-dot"></span>
+        <div class="nt-main">
+            <div class="nt-top">
+                <strong>@n.Title</strong>
+                <span class="nt-time">@item.TimeText</span>
+            </div>
+            <p>@n.Message</p>
+            @if (!string.IsNullOrEmpty(n.LinkUrl) && !string.IsNullOrEmpty(n.LinkText))
+            {
+                <a asp-controller="Notifications" asp-action="Open" asp-route-id="@n.Id" class="nt-link">@n.LinkText</a>
+            }
+        </div>
+    </div>
+}

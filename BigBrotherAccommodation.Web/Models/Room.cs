@@ -38,5 +38,21 @@ namespace BigBrotherAccommodation.Web.Models
 
         [Column("furniture")]
         public bool Furniture { get; set; }
+
+        [Column("occupancy_type")]
+        public string? OccupancyType { get; set; }
+
+        [Column("capacity")]
+        public int? Capacity { get; set; }
+
+        [Column("current_occupant")]
+        public string? CurrentOccupant { get; set; }
+
+        [Column("location")]
+        public string? Location { get; set; }
+
+        // false hides a room (e.g. test rooms) from the website and app listings
+        [Column("is_listed")]
+        public bool IsListed { get; set; } = true;
     }
 }

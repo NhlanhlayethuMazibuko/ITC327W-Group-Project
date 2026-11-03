@@ -1,0 +1,96 @@
+﻿@model RoomDetailsViewModel
+@{
+    ViewData["Title"] = Model.Room.Name;
+    ViewData["Active"] = "rooms";
+    Layout = "_PortalLayout";
+    var images = Model.Images;
+}
+
+<div class="rd-gallery @(images.Count < 2 ? "rd-gallery-one" : "")">
+    @if (images.Count == 0)
+    {
+        <div class="rd-nophoto"><i class="bi bi-image"></i></div>
+    }
+    else
+    {
+        <button type="button" class="rd-main" data-bs-toggle="modal" data-bs-target="#photoModal" onclick="showSlide(0)">
+            <img src="@images[0]" alt="@Model.Room.Name" />
+        </button>
+
+        @if (images.Count > 1)
+        {
+            <div class="rd-side">
+                @for (int i = 1; i < Math.Min(images.Count, 3); i++)
+                {
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#photoModal" onclick="showSlide(@i)">
+                        <img src="@images[i]" alt="@Model.Room.Name photo @(i + 1)" />
+                    </button>
+                }
+            </div>
+        }
+    }
+</div>
+
+<h1 class="rd-title">@Model.Room.Name</h1>
+<p class="rd-address"><i class="bi bi-geo-alt"></i> @(string.IsNullOrWhiteSpace(Model.Room.Location) ? "50 Besselsen St, Universitas, Bloemfontein" : Model.Room.Location)</p>
+
+<h2 class="rd-h2">Room Information</h2>
+<div class="rd-info">
+    <div class="rd-box">
+        <strong>Room type</strong>
+        <span>@Model.Room.RoomType</span>
+    </div>
+    <div class="rd-box">
+        <strong>Price &amp; availability</strong>
+        <span>R@(Model.Room.Price.ToString("N0"))/pm - @(Model.Room.IsAvailable ? "available" : "not available")</span>
+    </div>
+</div>
+
+<h2 class="rd-h2">Features</h2>
+<p class="rd-features">@string.Join(" - ", Model.Features)</p>
+
+<div class="rd-actions">
+    <a asp-controller="Viewing" asp-action="Book" asp-route-roomId="@Model.Room.Id" class="rd-btn">Book a viewing</a>
+    <a asp-controller="Application" asp-action="Details" asp-route-roomId="@Model.Room.Id" class="rd-btn-outline">Apply now</a>
+</div>
+
+@if (images.Any())
+{
+    <div class="modal fade" id="photoModal" tabindex="-1" aria-label="Room photos" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content rd-modal">
+                <button type="button" class="btn-close btn-close-white rd-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div id="photoCarousel" class="carousel slide">
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < images.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@images[i]" class="d-block w-100" alt="@Model.Room.Name photo @(i + 1)" />
+                            </div>
+                        }
+                    </div>
+                    @if (images.Count > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Opens the viewer on the photo that was clicked.
+        function showSlide(i) {
+            document.querySelectorAll('#photoCarousel .carousel-item').forEach(function (el, idx) {
+                el.classList.toggle('active', idx === i);
+            });
+        }
+    </script>
+}

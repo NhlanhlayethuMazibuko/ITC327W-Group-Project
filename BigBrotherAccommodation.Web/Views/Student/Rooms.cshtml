@@ -1,0 +1,52 @@
+﻿@model RoomListViewModel
+@{
+    ViewData["Title"] = "Browse rooms";
+    ViewData["Active"] = "rooms";
+    Layout = "_PortalLayout";
+}
+
+<h1 class="portal-title">Browse rooms</h1>
+
+<form method="get" asp-controller="Student" asp-action="Rooms" class="mt-3">
+    <div class="pr-search">
+        <div class="box">
+            <i class="bi bi-search"></i>
+            <input type="text" name="search" value="@Model.Search" placeholder="Search by type of room" />
+        </div>
+        <button type="submit" class="pr-btn">Filters</button>
+    </div>
+
+    <div class="pr-filters">
+        <select name="price" class="form-select" onchange="this.form.submit()">
+            <option value="" selected="@(string.IsNullOrEmpty(Model.SelectedPrice))">Price: Any</option>
+            <option value="low" selected="@(Model.SelectedPrice == "low")">Under R4 500</option>
+            <option value="mid" selected="@(Model.SelectedPrice == "mid")">Price R4 500 - R6 000</option>
+            <option value="high" selected="@(Model.SelectedPrice == "high")">Over R6 000</option>
+        </select>
+        <select name="roomType" class="form-select" onchange="this.form.submit()">
+            <option value="" selected="@(string.IsNullOrEmpty(Model.SelectedType))">Room type: All</option>
+            @foreach (var type in Model.RoomTypes)
+            {
+                <option value="@type" selected="@(Model.SelectedType == type)">@type</option>
+            }
+        </select>
+    </div>
+</form>
+
+<p class="pr-count">Showing available rooms</p>
+
+@if (Model.Rooms.Any())
+{
+    ViewData["DetailsController"] = "Student";
+    ViewData["DetailsAction"] = "RoomDetails";
+    <div class="browse-grid">
+        @foreach (var card in Model.Rooms)
+        {
+            <partial name="_RoomCard" model="card" />
+        }
+    </div>
+}
+else
+{
+    <p class="portal-sub mt-4">No rooms match your search. Try something different or <a asp-controller="Student" asp-action="Rooms">clear the filters</a>.</p>
+}

@@ -1,0 +1,83 @@
+﻿@model MyViewingsViewModel
+@{
+    ViewData["Title"] = "My viewings";
+    ViewData["Active"] = "viewings";
+    Layout = "_PortalLayout";
+}
+
+@functions {
+    private static string StatusLabel(ViewingRecord v)
+    {
+        var past = v.PreferredDate.Date < DateTime.Today;
+
+        return v.Status switch
+        {
+            "confirmed" => past ? "Completed" : "Confirmed",
+            "requested" => past ? "Expired" : "Pending",
+            "declined" => "Declined",
+            "cancelled" => "Cancelled",
+            "completed" => "Completed",
+            _ => v.Status
+        };
+    }
+
+    private static string StatusClass(ViewingRecord v) => v.Status switch
+    {
+        "confirmed" => "ok",
+        "requested" => "wait",
+        "completed" => "ok",
+        _ => "bad"
+    };
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">My viewings</h1>
+    <p class="ap-sub">See your viewing requests and their latest status.</p>
+
+    @if (TempData["Message"] is string message)
+    {
+        <div class="ap-ok">@message</div>
+    }
+
+    <div class="vw-tabs">
+        <a asp-controller="Viewing" asp-action="Mine" asp-route-tab="upcoming" class="@(Model.Tab == "upcoming" ? "on" : "")">Upcoming</a>
+        <a asp-controller="Viewing" asp-action="Mine" asp-route-tab="past" class="@(Model.Tab == "past" ? "on" : "")">Past requests</a>
+    </div>
+
+    @{
+        var list = Model.Tab == "past" ? Model.Past : Model.Upcoming;
+    }
+
+    <h2 class="vw-h2">@(Model.Tab == "past" ? "Past viewings" : "Upcoming viewing")</h2>
+
+    @if (!list.Any())
+    {
+        <p class="ap-sub">@(Model.Tab == "past" ? "You have no past viewing requests." : "You have no upcoming viewings.")</p>
+    }
+
+    @foreach (var card in list)
+    {
+        var v = card.Viewing;
+        <div class="vw-card">
+            <div class="vw-logo"><img src="~/images/logo.png" alt="Big Brother Student Accommodations" /></div>
+            <div class="vw-info">
+                <strong>@(card.Room?.Name ?? v.PreferredRoom)</strong>
+                @if (card.Room != null)
+                {
+                    <span>@card.Room.RoomType</span>
+                    <span>R@(card.Room.Price.ToString("N0"))/Month</span>
+                }
+                <span class="vw-when">@v.PreferredDate.ToString("ddd, d MMM yyyy", System.Globalization.CultureInfo.InvariantCulture) at @v.PreferredTime</span>
+            </div>
+            <div class="vw-foot">
+                <span class="vw-pill @StatusClass(v)">@StatusLabel(v)</span>
+                @if (card.Room != null)
+                {
+                    <a asp-controller="Student" asp-action="RoomDetails" asp-route-id="@card.Room.Id" class="btn-small-orange">View Details</a>
+                }
+            </div>
+        </div>
+    }
+
+    <a asp-controller="Viewing" asp-action="Book" class="ap-btn vw-send">Request another viewing</a>
+</div>

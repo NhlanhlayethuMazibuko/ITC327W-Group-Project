@@ -1,0 +1,97 @@
+﻿@model ProfileViewModel
+@{
+    ViewData["Title"] = "Profile & settings";
+    ViewData["Active"] = "profile";
+    Layout = "_PortalLayout";
+
+    var editing = ViewData["Editing"] is true;
+    var displayName = $"{Model.FirstName} {Model.LastName}".Trim();
+    if (displayName == "") displayName = "Student";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Profile &amp; settings</h1>
+    <p class="ap-sub">Manage the details associated with your Big Brother account.</p>
+
+    @if (TempData["Message"] is string message)
+    {
+        <div class="ap-ok">@message</div>
+    }
+    <div asp-validation-summary="ModelOnly" class="ap-error"></div>
+
+    <div class="pf-user">
+        <div class="pf-who">
+            <div class="pf-avatar"><i class="bi bi-person-fill"></i></div>
+            <div>
+                <strong>@displayName</strong>
+                <span>Student account</span>
+            </div>
+        </div>
+        <button type="button" id="editProfile" class="pf-edit">Edit profile</button>
+    </div>
+
+    <form method="post" asp-controller="Profile" asp-action="Index" id="profileForm">
+        <h2 class="pf-h2">Personal information</h2>
+        <div class="pf-grid">
+            <div class="ap-field">
+                <label asp-for="FirstName">First name</label>
+                <input asp-for="FirstName" data-editable readonly="@(!editing)" />
+                <span asp-validation-for="FirstName" class="ap-err"></span>
+            </div>
+            <div class="ap-field">
+                <label asp-for="LastName">Last name</label>
+                <input asp-for="LastName" data-editable readonly="@(!editing)" />
+                <span asp-validation-for="LastName" class="ap-err"></span>
+            </div>
+            <div class="ap-field">
+                <label>Email address</label>
+                <input value="@Model.Email" readonly />
+            </div>
+            <div class="ap-field">
+                <label asp-for="Phone">Phone number</label>
+                <input asp-for="Phone" type="tel" placeholder="+27 00 000 0000" data-editable readonly="@(!editing)" />
+                <span asp-validation-for="Phone" class="ap-err"></span>
+            </div>
+        </div>
+
+        <h2 class="pf-h2">Student details</h2>
+        <div class="pf-grid">
+            <div class="ap-field">
+                <label asp-for="Institution">Institution</label>
+                <input asp-for="Institution" placeholder="University / College" data-editable readonly="@(!editing)" />
+                <span asp-validation-for="Institution" class="ap-err"></span>
+            </div>
+            <div class="ap-field">
+                <label asp-for="StudentNumber">Student number</label>
+                <input asp-for="StudentNumber" placeholder="Enter student number" data-editable readonly="@(!editing)" />
+                <span asp-validation-for="StudentNumber" class="ap-err"></span>
+            </div>
+        </div>
+    </form>
+
+    <form id="changePasswordForm" method="post" asp-controller="Profile" asp-action="ChangePassword"></form>
+    <form id="logoutForm" method="post" asp-controller="Account" asp-action="LogOut"></form>
+
+    <h2 class="pf-h2">Account security</h2>
+    <div class="pf-security">
+        <span class="pf-password">Password: **********</span>
+        <button type="submit" form="changePasswordForm" class="pf-edit">Change password</button>
+    </div>
+
+    <div class="pf-buttons">
+        <button type="submit" form="logoutForm" class="pf-btn">Log Out</button>
+        <button type="submit" form="profileForm" id="saveProfile" class="pf-btn" disabled="@(!editing)">Save changes</button>
+    </div>
+</div>
+
+<script>
+    var editButton = document.getElementById('editProfile');
+    var saveButton = document.getElementById('saveProfile');
+    var editable = document.querySelectorAll('#profileForm input[data-editable]');
+
+    editButton.addEventListener('click', function () {
+        editable.forEach(function (input) { input.readOnly = false; });
+        saveButton.disabled = false;
+        editable[0].focus();
+    });
+</script>

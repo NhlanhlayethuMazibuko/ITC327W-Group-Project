@@ -1,0 +1,49 @@
+﻿@model MaintenanceDetailsViewModel
+@{
+    var r = Model.Record;
+    ViewData["Title"] = "Maintenance request";
+    ViewData["Active"] = "maintenance";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Maintenance request</h1>
+    <p class="mt-ref">@r.Reference - @r.Title</p>
+
+    <div class="mt-warn">Urgent safety issue? Contact the management team directly using the emergency contact details provided by management.</div>
+
+    <div class="ap-two">
+        <div class="ap-field">
+            <label>Room</label>
+            <input value="@r.RoomLabel" readonly />
+        </div>
+        <div class="ap-field">
+            <label>Submitted on</label>
+            <input value="@r.CreatedAt.ToLocalTime().ToString("dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture)" readonly />
+        </div>
+    </div>
+
+    <div class="ap-field">
+        <label>Your description</label>
+        <textarea rows="3" readonly>@r.Description</textarea>
+        @if (!string.IsNullOrEmpty(r.PhotoPath))
+        {
+            <small class="ap-hint">A photo is attached to this request.</small>
+        }
+    </div>
+
+    <h2 class="ap-h2">Updates</h2>
+    @foreach (var u in Model.Updates)
+    {
+        <div class="mt-upd">
+            <strong>@u.StatusLabel</strong>
+            <span>@u.CreatedAt.ToLocalTime().ToString("dd MMMM", System.Globalization.CultureInfo.InvariantCulture) - @u.Message</span>
+        </div>
+    }
+    @if (!Model.Updates.Any())
+    {
+        <p class="ap-sub">No updates yet.</p>
+    }
+
+    <a asp-controller="Maintenance" asp-action="Index" class="ap-btn vw-send">Back to requests</a>
+</div>
