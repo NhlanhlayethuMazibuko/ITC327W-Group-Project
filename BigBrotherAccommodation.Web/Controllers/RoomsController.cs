@@ -1,4 +1,5 @@
 ﻿using BigBrotherAccommodation.Web.Models;
+using BigBrotherAccommodation.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Supabase.Postgrest.Interfaces;
 
@@ -29,7 +30,7 @@ namespace BigBrotherAccommodation.Web.Controllers
                 var roomResult = await _database.Table<Room>().Get();
                 var imageResult = await _database.Table<RoomImage>().Get();
 
-                var rooms = roomResult.Models.Where(r => r.IsAvailable).ToList();
+                var rooms = roomResult.Models.Where(r => r.IsAvailable && r.IsListed).OrderBy(r => r.Name).ToList();
                 model.RoomTypes = rooms.Select(r => r.RoomType).Distinct().OrderBy(t => t).ToList();
 
                 if (!string.IsNullOrWhiteSpace(search))
@@ -56,7 +57,7 @@ namespace BigBrotherAccommodation.Web.Controllers
                 model.Rooms = rooms.Select(r => new RoomCard
                 {
                     Room = r,
-                    Image = imageResult.Models.FirstOrDefault(i => i.RoomId == r.Id)?.Image
+                    Image = RoomPhotos.Cover(r, imageResult.Models.Where(i => i.RoomId == r.Id).Select(i => i.Image))
                 }).ToList();
             }
             catch (Exception ex)
@@ -81,7 +82,6 @@ namespace BigBrotherAccommodation.Web.Controllers
 
                 var imageResult = await _database.Table<RoomImage>().Get();
 
-                // water, electricity and parking are the same for the whole property (see the FAQ)
                 var features = new List<string>();
                 if (room.Wifi) features.Add("WiFi");
                 if (room.Furniture) features.Add("Furnished");
@@ -94,7 +94,7 @@ namespace BigBrotherAccommodation.Web.Controllers
                 var model = new RoomDetailsViewModel
                 {
                     Room = room,
-                    Images = imageResult.Models.Where(i => i.RoomId == id).Select(i => i.Image).ToList(),
+                    Images = RoomPhotos.For(room, imageResult.Models.Where(i => i.RoomId == id).Select(i => i.Image)),
                     Features = features
                 };
 

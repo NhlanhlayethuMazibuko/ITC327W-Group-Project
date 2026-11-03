@@ -6,40 +6,59 @@ namespace BigBrotherAccommodation.Web.Models
     public class ApplicationRecord
     {
         [JsonPropertyName("application_id")] public Guid Id { get; set; }
-        [JsonPropertyName("reference")] public string Reference { get; set; } = "";
+        [JsonPropertyName("application_number")] public string Reference { get; set; } = "";
         [JsonPropertyName("student_id")] public Guid StudentId { get; set; }
         [JsonPropertyName("room_id")] public Guid? RoomId { get; set; }
-        [JsonPropertyName("full_name")] public string FullName { get; set; } = "";
-        [JsonPropertyName("email")] public string Email { get; set; } = "";
-        [JsonPropertyName("phone")] public string Phone { get; set; } = "";
-        [JsonPropertyName("institution")] public string Institution { get; set; } = "";
-        [JsonPropertyName("preferred_room")] public string PreferredRoom { get; set; } = "";
-        [JsonPropertyName("status")] public string Status { get; set; } = "draft";
-        [JsonPropertyName("amount_due")] public decimal? AmountDue { get; set; }
-        [JsonPropertyName("payment_due_date")] public DateTime? PaymentDueDate { get; set; }
-        [JsonPropertyName("submitted_at")] public DateTimeOffset? SubmittedAt { get; set; }
+        [JsonPropertyName("status_id")] public int StatusId { get; set; }
+        [JsonPropertyName("application_date")] public DateTime? ApplicationDate { get; set; }
+        [JsonPropertyName("created_at")] public DateTimeOffset? CreatedAt { get; set; }
+        [JsonPropertyName("staff_note")] public string? StaffNote { get; set; }
+
+        [JsonIgnore] public string FullName { get; set; } = "";
+        [JsonIgnore] public string Email { get; set; } = "";
+        [JsonIgnore] public string Phone { get; set; } = "";
+        [JsonIgnore] public string Institution { get; set; } = "";
+        [JsonIgnore] public string PreferredRoom { get; set; } = "";
+        [JsonIgnore] public string Status { get; set; } = "draft";
+        [JsonIgnore] public decimal? AmountDue { get; set; }
+        [JsonIgnore] public DateTime? PaymentDueDate { get; set; }
+        [JsonIgnore] public DateTimeOffset? SubmittedAt => ApplicationDate.HasValue
+            ? new DateTimeOffset(DateTime.SpecifyKind(ApplicationDate.Value, DateTimeKind.Utc))
+            : null;
     }
 
     public class ApplicationDocument
     {
         [JsonPropertyName("document_id")] public Guid Id { get; set; }
         [JsonPropertyName("application_id")] public Guid ApplicationId { get; set; }
-        [JsonPropertyName("doc_type")] public string DocType { get; set; } = "";
+        [JsonPropertyName("document_type")] public string DocType { get; set; } = "";
         [JsonPropertyName("file_path")] public string FilePath { get; set; } = "";
-        [JsonPropertyName("original_name")] public string OriginalName { get; set; } = "";
+        [JsonPropertyName("upload_date")] public DateTimeOffset? UploadDate { get; set; }
+        [JsonIgnore] public string OriginalName { get; set; } = "";
     }
 
     public class PaymentRecord
     {
         [JsonPropertyName("payment_id")] public Guid Id { get; set; }
-        [JsonPropertyName("reference")] public string Reference { get; set; } = "";
+        [JsonPropertyName("payment_reference")] public string? PaymentReference { get; set; }
         [JsonPropertyName("application_id")] public Guid ApplicationId { get; set; }
-        [JsonPropertyName("method")] public string Method { get; set; } = "";
-        [JsonPropertyName("status")] public string Status { get; set; } = "";
-        [JsonPropertyName("proof_path")] public string? ProofPath { get; set; }
-        [JsonPropertyName("proof_name")] public string? ProofName { get; set; }
-        [JsonPropertyName("amount_reported")] public decimal? AmountReported { get; set; }
-        [JsonPropertyName("reported_at")] public DateTimeOffset? ReportedAt { get; set; }
+        [JsonPropertyName("payment_method")] public string? PaymentMethod { get; set; }
+        [JsonPropertyName("payment_status")] public string? PaymentStatus { get; set; }
+        [JsonPropertyName("proof_of_payment")] public string? ProofOfPayment { get; set; }
+        [JsonPropertyName("amount")] public decimal? Amount { get; set; }
+        [JsonPropertyName("payment_date")] public DateTime? PaymentDate { get; set; }
+        [JsonPropertyName("due_date")] public DateTime? DueDate { get; set; }
+        [JsonPropertyName("created_at")] public DateTimeOffset? CreatedAt { get; set; }
+
+        [JsonIgnore] public string Reference => PaymentReference ?? "";
+        [JsonIgnore] public string Method => PaymentMethod ?? "";
+        [JsonIgnore] public string Status => PaymentStatus ?? "";
+        [JsonIgnore] public string? ProofPath => ProofOfPayment;
+        [JsonIgnore] public string? ProofName => ProofPath == null ? null : Path.GetFileName(ProofPath);
+        [JsonIgnore] public decimal? AmountReported => Amount;
+        [JsonIgnore] public DateTimeOffset? ReportedAt => PaymentDate.HasValue
+            ? new DateTimeOffset(DateTime.SpecifyKind(PaymentDate.Value, DateTimeKind.Utc))
+            : CreatedAt;
     }
 
     public class RoomLite

@@ -1,0 +1,45 @@
+﻿@model List<MaintenanceRecord>
+@{
+    ViewData["Title"] = "My maintenance requests";
+    ViewData["Active"] = "maintenance";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <div class="mt-head">
+        <div>
+            <h1 class="ap-title">My maintenance requests</h1>
+            <p class="ap-sub">Follow progress and read updates from management.</p>
+        </div>
+        @if (ViewBag.IsTenant == true)
+        {
+            <a asp-controller="Maintenance" asp-action="Create" class="mt-new">New request</a>
+        }
+    </div>
+
+    @if (TempData["Message"] is string message)
+    {
+        <div class="ap-ok">@message</div>
+    }
+
+    @if (ViewBag.IsTenant != true)
+    {
+        <p class="ap-sub">Maintenance requests open once your application has been approved and you are a tenant.</p>
+    }
+    else if (!Model.Any())
+    {
+        <p class="ap-sub">You haven’t reported any issues yet. Choose New request if something in your room needs attention.</p>
+    }
+
+    @foreach (var r in Model)
+    {
+        <div class="mt-item">
+            <div>
+                <h3>@r.Title</h3>
+                <div class="mt-meta">@r.Reference - @r.RoomLabel - Submitted @r.CreatedAt.ToLocalTime().ToString("d MMMM", System.Globalization.CultureInfo.InvariantCulture)</div>
+            </div>
+            <span class="mt-pill @r.Status">@r.StatusLabel</span>
+            <a asp-controller="Maintenance" asp-action="Details" asp-route-id="@r.Id" class="mt-view">View request</a>
+        </div>
+    }
+</div>

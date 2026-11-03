@@ -1,0 +1,33 @@
+@model RoomCard
+@* One room in a card grid (public Browse rooms, student Rooms and Dashboard). *@
+@{
+    var controller = ViewData["DetailsController"] as string ?? "Rooms";
+    var action = ViewData["DetailsAction"] as string ?? "Details";
+}
+
+<article class="browse-card">
+    <a class="browse-photo" asp-controller="@controller" asp-action="@action" asp-route-id="@Model.Room.Id">
+        @if (Model.Image != null)
+        {
+            <img src="@Model.Image" alt="@Model.Room.Name" loading="lazy" />
+        }
+        else
+        {
+            <div class="no-photo"><i class="bi bi-image"></i></div>
+        }
+        <span class="browse-type">@Model.Room.RoomType</span>
+    </a>
+    <div class="browse-body">
+        <h3>@Model.Room.Name</h3>
+        @if (!string.IsNullOrWhiteSpace(Model.Room.Location))
+        {
+            <p class="browse-location"><i class="bi bi-geo-alt"></i> @Model.Room.Location</p>
+        }
+        <p class="browse-desc">@Model.Room.Description</p>
+        <div class="browse-meta">
+            <span class="browse-price">R@(Model.Room.Price.ToString("N0"))<small> /month</small></span>
+            <span class="badge-available">Available</span>
+        </div>
+        <a asp-controller="@controller" asp-action="@action" asp-route-id="@Model.Room.Id" class="btn btn-orange w-100">View details</a>
+    </div>
+</article>

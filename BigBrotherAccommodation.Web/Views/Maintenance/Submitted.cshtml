@@ -1,0 +1,25 @@
+﻿@model MaintenanceRecord
+@{
+    ViewData["Title"] = "Request submitted";
+    ViewData["Active"] = "maintenance";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-done mt-done">
+    <div class="ap-check"><i class="bi bi-check-lg"></i></div>
+    <h1>Request submitted</h1>
+
+    <p class="ap-left">Your maintenance report has been sent to management.</p>
+    <div class="ap-ref">
+        <small>Status: Submitted - @Model.Title - @Model.RoomLabel</small>
+        <strong>@Model.Reference</strong>
+        <small>Keep this reference to follow up on your request.</small>
+    </div>
+
+    <div class="mt-warn ap-left">Management will review the issue and contact you if they need to arrange access. For urgent safety issues, contact management directly.</div>
+
+    <div class="ap-buttons">
+        <a asp-controller="Student" asp-action="Dashboard" class="ap-btn-soft">Return to dashboard</a>
+        <a asp-controller="Maintenance" asp-action="Index" class="ap-btn">View my requests</a>
+    </div>
+</div>

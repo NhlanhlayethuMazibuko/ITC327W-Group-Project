@@ -1,0 +1,72 @@
+﻿@model StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Active"] = "dashboard";
+    Layout = "_PortalLayout";
+}
+
+<h1 class="portal-title">Welcome back, @Model.FirstName</h1>
+<p class="portal-sub">Find a comfortable place to call home</p>
+
+@if (Model.ApplicationStatus is "submitted" or "reviewing")
+{
+    <a asp-controller="Application" asp-action="Mine" class="status-banner">
+        <i class="bi bi-megaphone-fill"></i>
+        <div>
+            <strong>Your application is under review</strong>
+            <span>We will notify you when a decision is made.</span>
+        </div>
+    </a>
+}
+else if (Model.ApplicationStatus == "accepted")
+{
+    <a asp-controller="Application" asp-action="Mine" class="status-banner status-green">
+        <i class="bi bi-megaphone-fill"></i>
+        <div>
+            <strong>Your application has been accepted</strong>
+            <span>Open My Applications to see your payment instructions.</span>
+        </div>
+    </a>
+}
+else if (Model.ApplicationStatus == "declined")
+{
+    <a asp-controller="Application" asp-action="Mine" class="status-banner status-red">
+        <i class="bi bi-megaphone-fill"></i>
+        <div>
+            <strong>Your application was not successful</strong>
+            <span>Contact support if you have any questions.</span>
+        </div>
+    </a>
+}
+<h2 class="portal-h2">Quick Actions</h2>
+<div class="quick-grid">
+    <a asp-controller="Student" asp-action="Rooms" class="quick-card">
+        <strong>Browse rooms</strong>
+        <small>Explore availability</small>
+    </a>
+    <a asp-controller="Application" asp-action="Mine" class="quick-card">
+        <strong>Track application</strong>
+        <small>View current progress</small>
+    </a>
+    <a asp-controller="Viewing" asp-action="Book" class="quick-card">
+        <strong>Book a viewing</strong>
+        <small>Choose a date and time</small>
+    </a>
+</div>
+
+<h2 class="portal-h2">Room Availability</h2>
+@if (Model.FeaturedRooms.Any())
+{
+    ViewData["DetailsController"] = "Student";
+    ViewData["DetailsAction"] = "RoomDetails";
+    <div class="browse-grid">
+        @foreach (var card in Model.FeaturedRooms)
+        {
+            <partial name="_RoomCard" model="card" />
+        }
+    </div>
+}
+else
+{
+    <p class="portal-sub">No rooms are available right now. Please check back soon.</p>
+}
