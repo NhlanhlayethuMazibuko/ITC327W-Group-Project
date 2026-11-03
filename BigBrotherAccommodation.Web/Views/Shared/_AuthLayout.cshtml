@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Big Brother Student Accommodations</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="auth-body">
+    <div class="auth-wrap">
+        <div class="auth-side">
+            <div class="auth-slides">
+                <div class="auth-slide on" style="background-image:url('@Url.Content("~/images/units/outside.jpg")')"></div>
+                <div class="auth-slide" style="background-image:url('@Url.Content("~/images/units/outside2.jpg")')"></div>
+                <div class="auth-slide" style="background-image:url('@Url.Content("~/images/units/outside3.jpg")')"></div>
+            </div>
+            <div class="auth-logo">
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" alt="Big Brother Student Accommodations" />
+                </a>
+            </div>
+            <div class="auth-side-text">
+                <h2>Find your student home with<br />Big Brother</h2>
+                <p>Secure, comfortable and affordable accommodation for students.</p>
+            </div>
+        </div>
+
+        <div class="auth-panel">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/slideshow.js" asp-append-version="true"></script>
+</body>
+</html>
