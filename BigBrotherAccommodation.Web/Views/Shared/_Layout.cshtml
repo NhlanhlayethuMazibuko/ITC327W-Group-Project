@@ -40,7 +40,7 @@
                         <a asp-controller="Account" asp-action="SignIn" class="btn btn-bb-outline">Sign In</a>
                         <a asp-controller="Account" asp-action="SignUp" class="btn btn-bb-outline">Register</a>
                     }
-                </div>>
+                </div>
             </div>
         </div>
     </nav>
@@ -59,7 +59,7 @@
                              alt="Big Brother Student Accommodations" />
                     </a>
                     <p class="footer-description">
-                        Big Brother Student Accommodations is a student housing provider based in Bloemfontein, Free State.
+                        Big Brother Student Accommodations is a student housing provider based in Bloemfontein, Free State. 
                         We offer convenient accommodation options for UFS and CUT students, helping them find a comfortable place to live while they study.
                     </p>
                 </div>
@@ -94,7 +94,16 @@
         </div>
     </footer>
 
+    <script>
+        // Supabase falls back to the site root when its redirect URL isn't allow-listed
+        if (/type=recovery/.test(location.hash)) {
+            location.replace("@Url.Action("ResetPassword", "Account")" + location.hash);
+        } else if (/type=signup/.test(location.hash)) {
+            location.replace("@Url.Action("SignIn", "Account", new { confirmed = true })");
+        }
+    </script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/slideshow.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

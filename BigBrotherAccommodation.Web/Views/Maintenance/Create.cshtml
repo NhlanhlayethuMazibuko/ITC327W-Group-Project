@@ -1,0 +1,74 @@
+﻿@model MaintenanceFormViewModel
+@{
+    ViewData["Title"] = "Report a maintenance issue";
+    ViewData["Active"] = "maintenance";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Report a maintenance issue</h1>
+    <p class="ap-sub">Tell us what needs attention in your room.</p>
+
+    <div class="mt-warn">Urgent safety issue? Contact the management team directly using the emergency contact details provided by management.</div>
+
+    <div asp-validation-summary="ModelOnly" class="ap-error"></div>
+
+    <form method="post" asp-controller="Maintenance" asp-action="Create" enctype="multipart/form-data">
+        <div class="ap-field">
+            <label for="Category">Issue category</label>
+            <select name="Category" id="Category" class="ap-select">
+                <option value="">Select category</option>
+                @foreach (var c in Model.Categories)
+                {
+                    <option value="@c" selected="@(Model.Category == c)">@c</option>
+                }
+            </select>
+            <span asp-validation-for="Category" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label for="Priority">Priority</label>
+            <select name="Priority" id="Priority" class="ap-select">
+                <option value="">Routine / Urgent</option>
+                <option value="routine" selected="@(Model.Priority == "routine")">Routine</option>
+                <option value="urgent" selected="@(Model.Priority == "urgent")">Urgent</option>
+            </select>
+            <span asp-validation-for="Priority" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label asp-for="Title">Short title</label>
+            <input asp-for="Title" placeholder="e.g. Bathroom tap leaking" />
+            <span asp-validation-for="Title" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label asp-for="Description">Describe the issue</label>
+            <textarea asp-for="Description" rows="3" placeholder="Where is the problem? When did it start? What have you noticed?"></textarea>
+            <span asp-validation-for="Description" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label>Photo (optional)</label>
+            <label class="mt-photo">
+                <input type="file" name="photo" accept=".jpg,.jpeg,.png" />
+                <span class="mt-plus">+</span>
+                <span id="photoName">Add photo</span>
+            </label>
+            <small class="ap-hint">JPG or PNG, up to 5 MB.</small>
+        </div>
+
+        <div class="mt-actions">
+            <a asp-controller="Maintenance" asp-action="Index" class="ap-btn-outline mt-cancel">Cancel</a>
+            <button type="submit" class="ap-btn mt-submit">Submit maintenance request</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    var photoInput = document.querySelector('.mt-photo input');
+    photoInput.addEventListener('change', function () {
+        document.getElementById('photoName').textContent =
+            photoInput.files.length ? photoInput.files[0].name : 'Add photo';
+    });
+</script>

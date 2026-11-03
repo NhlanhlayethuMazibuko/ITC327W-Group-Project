@@ -1,0 +1,39 @@
+﻿@model NotificationsViewModel
+@{
+    ViewData["Title"] = "Notifications";
+    ViewData["Active"] = "notifications";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Notifications</h1>
+    <p class="ap-sub">Updates about your applications, viewings and accommodation.</p>
+
+    <div class="nt-bar">
+        <div class="nt-chips">
+            <a asp-controller="Notifications" asp-action="Index" class="nt-chip @(Model.Filter != "unread" ? "on" : "")">All</a>
+            <a asp-controller="Notifications" asp-action="Index" asp-route-filter="unread" class="nt-chip @(Model.Filter == "unread" ? "on" : "")">Unread (@Model.UnreadCount)</a>
+        </div>
+        <form method="post" asp-controller="Notifications" asp-action="MarkAllRead">
+            <input type="hidden" name="filter" value="@Model.Filter" />
+            <button type="submit" class="nt-markall">Mark all as read</button>
+        </form>
+    </div>
+
+    @if (!Model.Today.Any() && !Model.Earlier.Any())
+    {
+        <p class="ap-sub">@(Model.Filter == "unread" ? "You have no unread notifications." : "You have no notifications yet.")</p>
+    }
+
+    @if (Model.Today.Any())
+    {
+        <h2 class="nt-h2">Today</h2>
+        <partial name="_NotificationList" model="Model.Today" />
+    }
+
+    @if (Model.Earlier.Any())
+    {
+        <h2 class="nt-h2">Earlier</h2>
+        <partial name="_NotificationList" model="Model.Earlier" />
+    }
+</div>

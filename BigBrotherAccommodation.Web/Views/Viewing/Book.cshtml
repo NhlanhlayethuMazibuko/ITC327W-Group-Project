@@ -1,0 +1,75 @@
+﻿@model BookViewingViewModel
+@{
+    ViewData["Title"] = "Book a viewing";
+    ViewData["Active"] = "viewings";
+    Layout = "_PortalLayout";
+}
+
+<div class="ap-wrap">
+    <h1 class="ap-title">Book a viewing</h1>
+    <p class="ap-sub">Choose a preferred date and time for a room visit.</p>
+
+    <div asp-validation-summary="ModelOnly" class="ap-error"></div>
+
+    <form method="post" asp-controller="Viewing" asp-action="Book">
+        <input type="hidden" asp-for="RoomId" />
+
+        <div class="ap-field">
+            <label for="PreferredDate">Preferred date</label>
+            <select name="PreferredDate" id="PreferredDate" class="ap-select">
+                <option value="">Select a date</option>
+                @foreach (var d in Model.Dates)
+                {
+                    <option value="@d.Value" selected="@(Model.PreferredDate == d.Value)">@d.Label</option>
+                }
+            </select>
+            <span asp-validation-for="PreferredDate" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label for="PreferredTime">Preferred time</label>
+            <div class="ap-two">
+                <div>
+                    <select name="PreferredTime" id="PreferredTime" class="ap-select">
+                        <option value="">Choose a time</option>
+                        @foreach (var t in Model.Times)
+                        {
+                            <option value="@t" selected="@(Model.PreferredTime == t)">@t</option>
+                        }
+                    </select>
+                    <span asp-validation-for="PreferredTime" class="ap-err"></span>
+                </div>
+                <div>
+                    <select name="AlternativeTime" id="AlternativeTime" class="ap-select">
+                        <option value="">Alternative time</option>
+                        @foreach (var t in Model.Times)
+                        {
+                            <option value="@t" selected="@(Model.AlternativeTime == t)">@t</option>
+                        }
+                    </select>
+                    <span asp-validation-for="AlternativeTime" class="ap-err"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ap-field">
+            <label asp-for="Phone">Your contact number</label>
+            <input asp-for="Phone" type="tel" placeholder="Enter your phone number" autocomplete="tel" />
+            <span asp-validation-for="Phone" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label asp-for="Message">Message (optional)</label>
+            <textarea asp-for="Message" rows="3" placeholder="Add any helpful details"></textarea>
+            <span asp-validation-for="Message" class="ap-err"></span>
+        </div>
+
+        <div class="ap-field">
+            <label asp-for="PreferredRoom">Preferred room</label>
+            <input asp-for="PreferredRoom" placeholder="Enter your preferred room" />
+            <span asp-validation-for="PreferredRoom" class="ap-err"></span>
+        </div>
+
+        <button type="submit" class="ap-btn vw-send">Send viewing request</button>
+    </form>
+</div>
