@@ -1,0 +1,79 @@
+@model AdminPaymentsViewModel
+@{
+    ViewData["Title"] = "Payment records";
+    ViewData["Active"] = "payments";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Payment records</h1>
+        <p class="adm-sub">Payment records reported by students.</p>
+    </div>
+</div>
+
+@if (TempData["Message"] is string message)
+{
+    <p class="adm-sub">@message</p>
+}
+@if (TempData["Error"] is string error)
+{
+    <p class="text-danger">@error</p>
+}
+
+@if (Model.LoadFailed)
+{
+    <p class="adm-sub">Payment records could not be loaded from Supabase.</p>
+}
+else if (Model.Items.Count == 0)
+{
+    <p class="adm-sub">There are no payment records in Supabase.</p>
+}
+else
+{
+    <div class="adm-table-wrap">
+        <table class="adm-table adm-report-table">
+            <thead>
+                <tr><th>Student</th><th>Method</th><th>Reported amount</th><th>Room</th><th>Status</th><th>Payment date</th><th>Account check</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.StudentName @if (!string.IsNullOrWhiteSpace(item.StudentNumber)) { <span>(@item.StudentNumber)</span> }</td>
+                        <td>@item.Payment.PaymentMethod</td>
+                        <td>@(item.Payment.Amount?.ToString("C") ?? "")</td>
+                        <td>@item.Room</td>
+                        <td><span class="adm-report-status">@item.Payment.PaymentStatus</span></td>
+                        <td>@item.Payment.PaymentDate?.ToString("d")</td>
+                        <td>@item.Payment.VerifiedAgainstAccount</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <form asp-controller="Admin" asp-action="SavePaymentVerification" asp-route-id="@item.Payment.Id" method="post" class="adm-payment-verification">
+                                <label>
+                                    Verified against account?
+                                    <select name="VerifiedAgainstAccount" required>
+                                        <option value="">Choose: Yes / No / Need more information</option>
+                                        <option value="Yes" selected="@(item.Payment.VerifiedAgainstAccount == "Yes" ? "selected" : null)">Yes</option>
+                                        <option value="No" selected="@(item.Payment.VerifiedAgainstAccount == "No" ? "selected" : null)">No</option>
+                                        <option value="Need more information" selected="@(item.Payment.VerifiedAgainstAccount == "Need more information" ? "selected" : null)">Need more information</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Verified amount
+                                    <input type="number" name="VerifiedAmount" min="0" step="0.01" value="@(item.Payment.VerifiedAmount?.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))" />
+                                </label>
+                                <label>
+                                    Verified date
+                                    <input type="date" name="VerifiedDate" value="@(item.Payment.VerifiedDate?.ToString("yyyy-MM-dd"))" />
+                                </label>
+                                <button class="adm-btn" type="submit">Save verification</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

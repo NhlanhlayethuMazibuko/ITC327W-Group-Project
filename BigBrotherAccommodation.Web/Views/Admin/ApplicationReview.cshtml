@@ -1,0 +1,80 @@
+﻿@model AdminApplicationReviewViewModel
+@{
+    ViewData["Title"] = "Application review";
+    ViewData["Active"] = "applications";
+    Layout = "_AdminLayout";
+    var steps = new[] { ("submitted", "Submitted"), ("reviewing", "Reviewing"), ("decision", "Decision") };
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Application review</h1>
+        <p class="adm-sub">Reference: @Model.Reference <span class="adm-sep">-</span> Submitted: @Model.SubmittedText</p>
+    </div>
+</div>
+
+<div class="adm-stage">
+    <strong>@("Current stage: " + Model.StageLabel + (string.IsNullOrEmpty(Model.OutcomeLabel) ? "" : " - " + Model.OutcomeLabel))</strong>
+    <div class="adm-steps">
+        @for (var i = 0; i < steps.Length; i++)
+        {
+            <span class="@(steps[i].Item1 == Model.StageKey ? "on" : "")">@steps[i].Item2</span>
+            @if (i < steps.Length - 1)
+            {
+                <i class="bi bi-chevron-right"></i>
+            }
+        }
+    </div>
+</div>
+
+<h2 class="adm-h2">Student details</h2>
+<div class="adm-two">
+    <div class="adm-card adm-kv">
+        <p><span>Name:</span> @Model.Name</p>
+        <p><span>Email:</span> @Model.Email</p>
+        <p><span>Phone:</span> @Model.Phone</p>
+    </div>
+    <div class="adm-card adm-kv">
+        <p><span>Institution:</span> @Model.Institution</p>
+        <p><span>Student number:</span> @Model.StudentNumber</p>
+        <p><span>Selected room:</span> @Model.Room</p>
+    </div>
+</div>
+
+<h2 class="adm-h2">Update application stage</h2>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="adm-error">@Model.Error</div>
+}
+
+<form method="post" asp-controller="Admin" asp-action="ApplicationReview" asp-route-id="@Model.Id" data-stage-form>
+    <div class="adm-two">
+        <div class="adm-field">
+            <label for="Stage">Stage</label>
+            <select id="Stage" name="Stage" data-stage-select>
+                <option value="submitted" selected="@(Model.Form.Stage == "submitted")">Submitted</option>
+                <option value="reviewing" selected="@(Model.Form.Stage == "reviewing")">Reviewing</option>
+                <option value="decision" selected="@(Model.Form.Stage == "decision")">Decision</option>
+            </select>
+        </div>
+        <div class="adm-field">
+            <label for="Outcome">Outcome (only for a decision)</label>
+            <select id="Outcome" name="Outcome" data-outcome-select>
+                <option value="">Choose outcome</option>
+                <option value="approved" selected="@(Model.Form.Outcome == "approved")">Approved</option>
+                <option value="rejected" selected="@(Model.Form.Outcome == "rejected")">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="adm-field adm-gap-top">
+        <label for="Note">Staff note (optional)</label>
+        <input id="Note" name="Note" type="text" maxlength="1000" value="@Model.Form.Note" placeholder="Add an internal note if needed" />
+    </div>
+
+    <div class="adm-actions">
+        <button type="submit" class="adm-btn">Save update</button>
+        <a asp-controller="Admin" asp-action="Applications" class="adm-btn-outline">Cancel</a>
+    </div>
+</form>

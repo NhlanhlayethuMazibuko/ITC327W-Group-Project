@@ -1,0 +1,47 @@
+﻿@{
+    var active = ViewData["Active"] as string ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Big Brother Staff Portal</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="adm-body">
+    <div class="adm">
+        <aside class="adm-side">
+            <a class="adm-logo" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="Big Brother Student Accommodations" />
+            </a>
+
+            <nav class="adm-nav">
+                <a asp-controller="Admin" asp-action="Dashboard" class="@(active == "dashboard" ? "active" : "")"><i class="bi bi-grid"></i> Dashboard</a>
+                <a asp-controller="Admin" asp-action="Rooms" class="@(active == "rooms" ? "active" : "")"><i class="bi bi-building"></i> Properties &amp; Rooms</a>
+                <a asp-controller="Admin" asp-action="Applications" class="@(active == "applications" ? "active" : "")"><i class="bi bi-file-earmark-text"></i> Applications</a>
+                <a asp-controller="Admin" asp-action="Viewings" class="@(active == "viewings" ? "active" : "")"><i class="bi bi-eye"></i> Viewing requests</a>
+                <a asp-controller="Admin" asp-action="Students" class="@(active == "students" ? "active" : "")"><i class="bi bi-people"></i> Student records</a>
+                <a asp-controller="Admin" asp-action="Maintenance" class="@(active == "reports" ? "active" : "")"><i class="bi bi-bell"></i> Reports</a>
+                <a asp-controller="Admin" asp-action="Announcements" class="@(active == "announcements" ? "active" : "")"><i class="bi bi-megaphone"></i> Announcements</a>
+                <a asp-controller="Admin" asp-action="Payments" class="@(active == "payments" ? "active" : "")"><i class="bi bi-check-circle"></i> Payments</a>
+            </nav>
+
+            <form asp-controller="Account" asp-action="LogOut" method="post" class="adm-signout">
+                <button type="submit"><i class="bi bi-box-arrow-left"></i> Sign out</button>
+            </form>
+            <div class="adm-foot">STAFF PORTAL</div>
+        </aside>
+
+        <main class="adm-main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+</body>
+</html>

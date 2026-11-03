@@ -1,0 +1,79 @@
+﻿@model AdminStudentRecordViewModel
+@{
+    ViewData["Title"] = "Student record";
+    ViewData["Active"] = "students";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Student record</h1>
+    </div>
+    <a asp-controller="Admin" asp-action="Students" class="adm-link-muted">Back to student records</a>
+</div>
+
+<div class="adm-card adm-profile">
+    <div class="adm-avatar">@Model.Initial</div>
+    <div class="adm-profile-text">
+        <strong>@Model.Name</strong>
+        <small>Student number: @Model.StudentNumber</small>
+        <small>Record type: @Model.Occupancy</small>
+    </div>
+    <span class="adm-badge">@Model.BadgeLabel</span>
+</div>
+
+<div class="adm-two">
+    <div class="adm-card">
+        <h2 class="adm-card-title">Personal details</h2>
+        <div class="adm-kv-grid">
+            <div><small>Email address</small><span>@Model.Email</span></div>
+            <div><small>Phone number</small><span>@Model.Phone</span></div>
+            <div><small>Institution</small><span>@Model.Institution</span></div>
+        </div>
+    </div>
+    <div class="adm-card">
+        <h2 class="adm-card-title">Room details</h2>
+        <div class="adm-kv-grid">
+            <div><small>Room</small><span>@Model.Room</span></div>
+            <div><small>Occupancy status</small><span>@Model.Occupancy</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="adm-card">
+    <h2 class="adm-card-title">Application history</h2>
+    <div class="adm-history">
+        @foreach (var a in Model.Applications)
+        {
+            <div class="adm-history-row">
+                <a asp-controller="Admin" asp-action="ApplicationReview" asp-route-id="@a.Id" class="adm-orange-link">@a.Reference</a>
+                <span>@a.Room</span>
+                <span>@a.SubmittedText</span>
+                <span>@a.Outcome</span>
+            </div>
+        }
+        @if (!Model.Applications.Any())
+        {
+            <div class="adm-empty-line">No applications yet.</div>
+        }
+    </div>
+</div>
+
+<div class="adm-card">
+    <h2 class="adm-card-title">Viewing history</h2>
+    <div class="adm-history">
+        @foreach (var v in Model.Viewings)
+        {
+            <div class="adm-history-row">
+                <a asp-controller="Admin" asp-action="ViewingDetails" asp-route-id="@v.Id" class="adm-orange-link">@v.Reference</a>
+                <span>@v.Room</span>
+                <span>@v.DateText</span>
+                <span>@v.Status</span>
+            </div>
+        }
+        @if (!Model.Viewings.Any())
+        {
+            <div class="adm-empty-line">No viewing requests yet.</div>
+        }
+    </div>
+</div>
