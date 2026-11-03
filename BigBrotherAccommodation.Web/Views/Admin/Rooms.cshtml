@@ -1,0 +1,103 @@
+﻿@model AdminRoomListViewModel
+@{
+    ViewData["Title"] = "Properties & rooms";
+    ViewData["Active"] = "rooms";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Properties &amp; rooms</h1>
+        <p class="adm-sub">Maintain room details and availability for student listings.</p>
+    </div>
+    <a asp-controller="Admin" asp-action="AddRoom" class="adm-btn">+ Add room</a>
+</div>
+
+@if (TempData["Message"] is string message)
+{
+    <div class="adm-notice">@message</div>
+}
+
+<form method="get" asp-controller="Admin" asp-action="Rooms" class="adm-filters">
+    <input type="text" name="search" value="@Model.Search" placeholder="Search property or room" />
+    <select name="availability" onchange="this.form.submit()">
+        <option value="" selected="@(string.IsNullOrEmpty(Model.Availability))">Availability: All</option>
+        <option value="available" selected="@(Model.Availability == "available")">Available</option>
+        <option value="occupied" selected="@(Model.Availability == "occupied")">Occupied</option>
+    </select>
+</form>
+
+<div class="adm-table-wrap">
+    <table class="adm-table">
+        <thead>
+            <tr>
+                <th>Room</th>
+                <th>Type</th>
+                <th>Availability</th>
+                <th>Occupied by</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.Rooms)
+            {
+                <tr>
+                    <td>
+                        <div>@r.Name @if (!r.IsListed) { <span class="adm-bad" title="Not shown on the website or app">Hidden</span> }</div>
+                        <small>@r.RoomType</small>
+                    </td>
+                    <td>@(string.IsNullOrWhiteSpace(r.OccupancyType) ? "Single" : r.OccupancyType)</td>
+                    <td>
+                        @if (r.IsAvailable)
+                        {
+                            <span class="adm-ok">Available</span>
+                        }
+                        else
+                        {
+                            <span class="adm-bad">Occupied</span>
+                        }
+                        <div><small>@(Model.Occupants.TryGetValue(r.Id, out var count) ? count.Count : 0) of @(r.Capacity ?? 1) bed@((r.Capacity ?? 1) == 1 ? "" : "s") taken</small></div>
+                    </td>
+                    <td>
+                        @if (Model.Occupants.TryGetValue(r.Id, out var tenants) && tenants.Count > 0)
+                        {
+                            foreach (var t in tenants)
+                            {
+                                <div style="margin-bottom:6px">
+                                    <a asp-controller="Admin" asp-action="StudentRecord" asp-route-id="@t.StudentId" class="adm-orange-link"><strong>@t.Name</strong></a>
+                                    <small style="display:block">
+                                        @if (!string.IsNullOrEmpty(t.StudentNumber)) { <text>Student no. @t.StudentNumber<br /></text> }
+                                        @if (!string.IsNullOrEmpty(t.Phone)) { <text>@t.Phone<br /></text> }
+                                        @if (!string.IsNullOrEmpty(t.Email) && t.Email != "-") { <text>@t.Email<br /></text> }
+                                        @if (!string.IsNullOrEmpty(t.Institution)) { <text>@t.Institution<br /></text> }
+                                        @t.Application @if (t.Since.HasValue) { <text>- since @t.Since.Value.ToLocalTime().ToString("d MMM yyyy")</text> }
+                                    </small>
+                                    <form method="post" asp-controller="Admin" asp-action="RemoveTenant" asp-route-applicationId="@t.ApplicationId" class="m-0"
+                                          onsubmit="return confirm('Remove this tenant from the room? Use this when they have moved out. The room becomes available again.');">
+                                        <button type="submit" class="adm-btn-outline" style="padding:2px 10px;font-size:12px;margin-top:4px">Remove (moved out)</button>
+                                    </form>
+                                </div>
+                            }
+                        }
+                        else if (!string.IsNullOrWhiteSpace(r.CurrentOccupant))
+                        {
+                            <span>@r.CurrentOccupant</span>
+                        }
+                        else
+                        {
+                            <small>-</small>
+                        }
+                    </td>
+                    <td>R@(r.Price.ToString("N0"))/pm</td>
+                    <td><a asp-controller="Admin" asp-action="EditRoom" asp-route-id="@r.Id" class="adm-orange-link">Edit</a></td>
+                </tr>
+            }
+            @if (!Model.Rooms.Any())
+            {
+                <tr><td colspan="6" class="adm-empty">No rooms match your search.</td></tr>
+            }
+        </tbody>
+    </table>
+
+</div>

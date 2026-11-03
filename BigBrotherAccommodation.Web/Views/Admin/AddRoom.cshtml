@@ -1,0 +1,19 @@
+﻿@model RoomFormViewModel
+@{
+    ViewData["Title"] = "Add room";
+    ViewData["Active"] = "rooms";
+    ViewData["PreviewTitle"] = "Listing preview";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="adm-title">Add room</h1>
+<p class="adm-sub">Enter room details and availability for student listings.</p>
+
+<form method="post" asp-controller="Admin" asp-action="AddRoom" enctype="multipart/form-data">
+    <partial name="_RoomForm" model="Model" />
+
+    <div class="adm-actions end">
+        <a asp-controller="Admin" asp-action="Rooms" class="adm-btn-outline">Cancel</a>
+        <button type="submit" class="adm-btn">Save room</button>
+    </div>
+</form>

@@ -1,0 +1,27 @@
+@model AdminAnnouncementDetailsViewModel
+@{
+    ViewData["Title"] = "Announcement details";
+    ViewData["Active"] = "reports";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">@Model.Announcement.Title</h1>
+        <p class="adm-sub">Announcement details from Supabase.</p>
+    </div>
+</div>
+
+<section class="adm-card">
+    <div class="adm-announcement-details-grid">
+        <div><small>Published by user ID</small><span>@Model.Publisher</span></div>
+        <div><small>Created</small><span>@Model.Announcement.CreatedAt?.ToLocalTime().ToString("g")</span></div>
+        <div class="adm-announcement-full">
+            <small>Message</small>
+            <p>@Model.Announcement.Message</p>
+        </div>
+    </div>
+    <div class="adm-actions end">
+        <a class="adm-btn-outline" asp-controller="Admin" asp-action="Announcements">Back to announcements</a>
+    </div>
+</section>

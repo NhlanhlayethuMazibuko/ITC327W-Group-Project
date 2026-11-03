@@ -1,0 +1,89 @@
+﻿@model AdminViewingDetailViewModel
+@{
+    ViewData["Title"] = "Viewing request details";
+    ViewData["Active"] = "viewings";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Viewing request details</h1>
+        <p class="adm-sub">Review the request and record your response.</p>
+    </div>
+</div>
+
+<div class="adm-card">
+    <h2 class="adm-card-title">Request: @Model.Reference</h2>
+    <div class="adm-grid adm-kv-grid">
+        <div><small>Student</small><span>@Model.Student</span></div>
+        <div><small>Request status</small><span class="adm-st adm-vs-@Model.StatusKey">@Model.StatusLabel</span></div>
+        <div><small>Email address</small><span>@Model.Email</span></div>
+        <div><small>Room information</small><span>@Model.Room</span></div>
+        <div><small>Contact number</small><span>@Model.Phone</span></div>
+        <div><small>Requested date &amp; time</small><span>@Model.RequestedText</span></div>
+        <div class="adm-span"><small>Student message</small><span>@Model.StudentMessage</span></div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="adm-error">@Model.Error</div>
+}
+
+<form method="post" asp-controller="Admin" asp-action="ViewingDetails" asp-route-id="@Model.Id" class="adm-card" data-response-form>
+    <h2 class="adm-card-title">Your response</h2>
+    <div class="adm-grid">
+        <div class="adm-field">
+            <label for="Response">Response</label>
+            <select id="Response" name="Response" data-response-select>
+                <option value="">Choose a response</option>
+                <option value="confirm" selected="@(Model.Form.Response == "confirm")">Confirm requested time</option>
+                <option value="alternative" selected="@(Model.Form.Response == "alternative")">Suggest alternative time</option>
+                <option value="decline" selected="@(Model.Form.Response == "decline")">Decline request</option>
+            </select>
+        </div>
+        <div class="adm-field" data-alt-field>
+            <label for="AltDate">Alternative date</label>
+            <select id="AltDate" name="AltDate">
+                <option value="">Select date</option>
+                @foreach (var d in Model.Dates)
+                {
+                    <option value="@d.Value" selected="@(Model.Form.AltDate == d.Value)">@d.Label</option>
+                }
+            </select>
+        </div>
+        <div class="adm-field" data-alt-field>
+            <label for="AltTime">Alternative time</label>
+            <select id="AltTime" name="AltTime">
+                <option value="">Select time</option>
+                @foreach (var t in Model.Times)
+                {
+                    <option value="@t" selected="@(Model.Form.AltTime == t)">@t</option>
+                }
+            </select>
+        </div>
+        <div class="adm-field adm-span">
+            <label for="Message">Message to student</label>
+            <input id="Message" name="Message" type="text" maxlength="500" value="@Model.Form.Message" placeholder="Add a confirmation or suggest another time." />
+        </div>
+    </div>
+    <div class="adm-actions end">
+        <a asp-controller="Admin" asp-action="Viewings" class="adm-btn-outline">Cancel</a>
+        <button type="submit" class="adm-btn">Save update</button>
+    </div>
+</form>
+
+<div class="adm-card">
+    <h2 class="adm-card-title">Request history</h2>
+    <div class="adm-history">
+        @foreach (var h in Model.History)
+        {
+            <div class="adm-history-row">
+                <span>@h.Event</span>
+                <span>@h.Channel</span>
+                <span>@h.DateText</span>
+                <span>@h.Status</span>
+            </div>
+        }
+    </div>
+</div>

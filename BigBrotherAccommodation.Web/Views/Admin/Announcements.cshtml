@@ -1,0 +1,61 @@
+@model AdminAnnouncementsViewModel
+@{
+    ViewData["Title"] = "Announcements";
+    ViewData["Active"] = "announcements";
+    Layout = "_AdminLayout";
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">Announcements</h1>
+        <p class="adm-sub">Publish an announcement to every student and their notification inbox.</p>
+    </div>
+    <a class="adm-btn" href="#new-announcement">New announcement</a>
+</div>
+
+@if (TempData["Message"] is string message)
+{
+    <p class="adm-sub">@message</p>
+}
+
+@if (Model.LoadFailed)
+{
+    <p class="adm-sub">Announcements could not be loaded from Supabase.</p>
+}
+else if (Model.Items.Count == 0)
+{
+    <p class="adm-sub">There are no announcement records in Supabase.</p>
+}
+else
+{
+    <div class="adm-announcement-list">
+        @foreach (var item in Model.Items)
+        {
+            <div class="adm-announcement-row">
+                <a asp-controller="Admin" asp-action="AnnouncementDetails" asp-route-id="@item.Id" class="adm-announcement-text">@item.Title</a>
+                <span>@item.CreatedAt?.ToLocalTime().ToString("g")</span>
+                <a asp-controller="Admin" asp-action="AnnouncementDetails" asp-route-id="@item.Id" class="adm-orange-link">Details</a>
+            </div>
+        }
+    </div>
+}
+
+<section id="new-announcement" class="adm-card adm-report-editor">
+    <h2 class="adm-card-title">Create announcement</h2>
+    <form asp-controller="Admin" asp-action="CreateAnnouncement" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="adm-field">
+            <label asp-for="NewAnnouncement.Title">Title</label>
+            <input asp-for="NewAnnouncement.Title" />
+            <span asp-validation-for="NewAnnouncement.Title" class="text-danger"></span>
+        </div>
+        <div class="adm-field">
+            <label asp-for="NewAnnouncement.Message">Message</label>
+            <textarea asp-for="NewAnnouncement.Message" rows="3"></textarea>
+            <span asp-validation-for="NewAnnouncement.Message" class="text-danger"></span>
+        </div>
+        <div class="adm-actions end">
+            <button class="adm-btn" type="submit">Publish announcement</button>
+        </div>
+    </form>
+</section>

@@ -1,0 +1,86 @@
+@model AdminMaintenanceDetailViewModel
+@{
+    ViewData["Title"] = "Maintenance request";
+    ViewData["Active"] = "reports";
+    Layout = "_AdminLayout";
+    var r = Model.Record;
+}
+
+<div class="adm-head">
+    <div>
+        <h1 class="adm-title">@(r.RequestType ?? r.Category ?? "Maintenance request")</h1>
+        <p class="adm-sub">@r.ReferenceCode - reported @r.CreatedAt?.ToLocalTime().ToString("g")</p>
+    </div>
+    <span class="adm-report-status">@MaintenanceRecord.LabelFor(r.Status ?? "")</span>
+</div>
+
+@if (TempData["Message"] is string message)
+{
+    <div class="adm-ok">@message</div>
+}
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="adm-error">@Model.Error</div>
+}
+
+<section class="adm-card">
+    <div class="adm-announcement-details-grid">
+        <div><small>Student</small><span>@(string.IsNullOrEmpty(Model.StudentName) ? "-" : Model.StudentName) @if (!string.IsNullOrEmpty(Model.StudentNumber)) { <text>(@Model.StudentNumber)</text> }</span></div>
+        <div><small>Phone</small><span>@(string.IsNullOrEmpty(Model.Phone) ? "-" : Model.Phone)</span></div>
+        <div><small>Room</small><span>@(string.IsNullOrEmpty(Model.Room) ? "Not linked to a room" : Model.Room)</span></div>
+        <div><small>Category</small><span>@(r.Category ?? "-")</span></div>
+        <div><small>Priority</small><span>@(r.Priority ?? "-")</span></div>
+        <div><small>Type</small><span>@(r.RequestType ?? "-")</span></div>
+        <div class="adm-announcement-full">
+            <small>Description</small>
+            <p>@(r.Description ?? "-")</p>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+        {
+            <div class="adm-announcement-full">
+                <small>Photo</small>
+                <a href="@Model.PhotoUrl" target="_blank" rel="noopener">
+                    <img src="@Model.PhotoUrl" alt="Photo of the reported issue" style="max-width:100%;max-height:360px;border-radius:8px;display:block" />
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="adm-card">
+    <h2 class="adm-card-title">Updates</h2>
+    @if (Model.Updates.Count == 0)
+    {
+        <p class="adm-sub">No updates yet.</p>
+    }
+    else
+    {
+        <div class="adm-kv">
+            @foreach (var u in Model.Updates)
+            {
+                <p><span>@u.CreatedAt.ToLocalTime().ToString("g") - @u.StatusLabel</span> @u.Message</p>
+            }
+        </div>
+    }
+</section>
+
+<form method="post" asp-controller="Admin" asp-action="MaintenanceDetails" asp-route-id="@r.Id" class="adm-card">
+    <h2 class="adm-card-title">Update the student</h2>
+    <div class="adm-field">
+        <label for="Status">Status</label>
+        <select id="Status" name="Status">
+            @foreach (var s in BigBrotherAccommodation.Web.Services.AdminReportsService.MaintenanceStatuses)
+            {
+                <option value="@s" selected="@(Model.Form.Status == s)">@MaintenanceRecord.LabelFor(s)</option>
+            }
+        </select>
+    </div>
+    <div class="adm-field adm-gap-top">
+        <label for="Message">Message to the student (optional)</label>
+        <textarea id="Message" name="Message" rows="3" maxlength="1000" placeholder="e.g. A plumber will come on Thursday morning">@Model.Form.Message</textarea>
+    </div>
+    <div class="adm-actions">
+        <button type="submit" class="adm-btn">Save update</button>
+        <a asp-controller="Admin" asp-action="Maintenance" class="adm-btn-outline">Back to requests</a>
+    </div>
+</form>
