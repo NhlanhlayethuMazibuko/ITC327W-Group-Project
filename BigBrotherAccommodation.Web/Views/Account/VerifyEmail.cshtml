@@ -1,0 +1,42 @@
+@model VerifyEmailViewModel
+@{
+    ViewData["Title"] = "Verify your email";
+    Layout = "_AuthLayout";
+}
+
+<div class="auth-card">
+    <h1>Verify your email</h1>
+    <p class="auth-sub">We've emailed you a code. Enter it to finish creating your account.</p>
+
+    @if (ViewData["Notice"] is string notice)
+    {
+        <div class="auth-notice">@notice</div>
+    }
+
+    <div asp-validation-summary="ModelOnly" class="auth-error"></div>
+
+    <form method="post" asp-controller="Account" asp-action="VerifyEmail">
+        <div class="auth-field">
+            <label asp-for="Email">Email address</label>
+            <div class="auth-input">
+                <i class="bi bi-envelope"></i>
+                <input asp-for="Email" type="email" placeholder="Enter your email" autocomplete="email" />
+            </div>
+            <span asp-validation-for="Email"></span>
+        </div>
+
+        <div class="auth-field">
+            <label asp-for="Code">Verification code</label>
+            <div class="auth-input">
+                <i class="bi bi-shield-check"></i>
+                <input asp-for="Code" inputmode="numeric" autocomplete="one-time-code" placeholder="Code from the email" />
+            </div>
+            <span asp-validation-for="Code"></span>
+        </div>
+
+        <button type="submit" class="btn btn-orange w-100 mt-2">Verify</button>
+        <button type="submit" name="resend" value="1" formnovalidate class="btn btn-outline w-100 mt-2">Send a new code</button>
+    </form>
+
+    <p class="auth-switch">Already verified? <a asp-controller="Account" asp-action="SignIn">Sign in</a></p>
+</div>

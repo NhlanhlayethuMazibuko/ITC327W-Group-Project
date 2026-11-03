@@ -1,0 +1,66 @@
+﻿@model SignUpViewModel
+@{
+    ViewData["Title"] = "Create account";
+    Layout = "_AuthLayout";
+}
+
+<div class="auth-card">
+    <h1>Create account</h1>
+    <p class="auth-sub">Set up your Big Brother Student account</p>
+
+    <div asp-validation-summary="ModelOnly" class="auth-error"></div>
+
+    <form method="post" asp-controller="Account" asp-action="SignUp">
+        <div class="auth-row">
+            <div class="auth-field">
+                <div class="auth-input">
+                    <input asp-for="FirstName" class="plain" placeholder="First name" autocomplete="given-name" />
+                </div>
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div class="auth-field">
+                <div class="auth-input">
+                    <input asp-for="LastName" class="plain" placeholder="Last name" autocomplete="family-name" />
+                </div>
+                <span asp-validation-for="LastName"></span>
+            </div>
+        </div>
+
+        <div class="auth-field">
+            <label asp-for="Email">Email</label>
+            <div class="auth-input">
+                <i class="bi bi-envelope"></i>
+                <input asp-for="Email" type="email" placeholder="Enter your email" autocomplete="email" />
+            </div>
+            <span asp-validation-for="Email"></span>
+        </div>
+
+        <div class="auth-field">
+            <label asp-for="Password">Password</label>
+            <div class="auth-input">
+                <i class="bi bi-lock"></i>
+                <input asp-for="Password" type="password" placeholder="Enter your password" autocomplete="new-password" />
+            </div>
+            <span asp-validation-for="Password"></span>
+        </div>
+
+        <div class="auth-field">
+            <label asp-for="ConfirmPassword">Confirm Password</label>
+            <div class="auth-input">
+                <i class="bi bi-lock"></i>
+                <input asp-for="ConfirmPassword" type="password" placeholder="Confirm your password" autocomplete="new-password" />
+            </div>
+            <span asp-validation-for="ConfirmPassword"></span>
+        </div>
+
+        <button type="submit" class="btn btn-orange w-100 mt-2">Create Account</button>
+    </form>
+
+    <p class="auth-or">Or continue with</p>
+    <div class="auth-social">
+        <button type="button" disabled title="Coming soon"><i class="bi bi-google" style="color:#DB4437"></i> Google</button>
+        <button type="button" disabled title="Coming soon"><i class="bi bi-facebook" style="color:#1877F2"></i> Facebook</button>
+    </div>
+
+    <p class="auth-switch">Already have an account? <a asp-controller="Account" asp-action="SignIn">Sign In</a></p>
+</div>
