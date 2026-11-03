@@ -1,5 +1,5 @@
-
-
+using Microsoft.AspNetCore.Authentication.Cookies;
+using BigBrotherAccommodation.Web.Services;
 using Supabase.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +8,22 @@ builder.Services.AddSupabase(
     supabaseUrl: builder.Configuration["Supabase:Url"]!,
     supabaseKey: builder.Configuration["Supabase:Key"]!);
 
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<SupabaseServer>();
+builder.Services.AddScoped<ProfileService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<AdminRoomService>();
+builder.Services.AddScoped<AdminCaseService>();
+builder.Services.AddScoped<AdminReportsService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/SignIn";
+        options.AccessDeniedPath = "/Account/SignIn";
+        options.ExpireTimeSpan = TimeSpan.FromDays(14);
+        options.SlidingExpiration = true;
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,6 +41,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
