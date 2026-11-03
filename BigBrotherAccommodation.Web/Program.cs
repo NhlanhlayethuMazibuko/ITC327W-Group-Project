@@ -15,6 +15,11 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<AdminRoomService>();
 builder.Services.AddScoped<AdminCaseService>();
 builder.Services.AddScoped<AdminReportsService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<ApplicationService>();
+builder.Services.AddScoped<ViewingService>();
+builder.Services.AddScoped<MaintenanceService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
