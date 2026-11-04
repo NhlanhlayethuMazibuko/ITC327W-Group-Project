@@ -8,13 +8,19 @@ builder.Services.AddSupabase(
     supabaseUrl: builder.Configuration["Supabase:Url"]!,
     supabaseKey: builder.Configuration["Supabase:Key"]!);
 
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RoomService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<AdminRoomService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<SupabaseServer>();
-builder.Services.AddScoped<ProfileService>();
-builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped<AdminRoomService>();
+builder.Services.AddScoped<ApplicationService>();
+builder.Services.AddScoped<ViewingService>();
 builder.Services.AddScoped<AdminCaseService>();
 builder.Services.AddScoped<AdminReportsService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<MaintenanceService>();
+builder.Services.AddScoped<ProfileService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -25,16 +31,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
